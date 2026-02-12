@@ -8,6 +8,7 @@
     "start": "node server.js",
     "dev": "concurrently \"vite\" \"node serverdev.js\"",
     "build": "vite build --mode production",
+    "build:dev":"vite build --mode development",
     "preview": "vite preview"
   },
   "dependencies": {

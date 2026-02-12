@@ -9,7 +9,7 @@ import BaseIndex from '../views/BaseIndex.vue';
 
 const routes = [
     {
-        path: '/',
+        path: '/app',
         redirect: {name: 'Home.view'},
         component: BaseIndex,
         children: [

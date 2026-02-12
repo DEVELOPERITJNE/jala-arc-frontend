@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const isDev = import.meta.env.VITE_APP_NODE_ENV === "LOCAL";
 const $axInstance = axios.create({
+    withCredentials: true,
     headers:{
         'X-Client-Id': import.meta.env.VITE_APP_CLIENT_ID,
         'Content-Type': 'application/json',
@@ -17,15 +18,15 @@ const $axPdf = axios.create({
     // : `${import.meta.env.VITE_APP_API_URL}/articles/files`,
     baseURL : `${import.meta.env.VITE_APP_API_URL}/articles/files`,
     responseType: 'blob',
-    headers: {
-        'X-Client': import.meta.env.VITE_APP_CLIENT_ID,
-        'X-Requested-With': 'XMLHttpRequest',
-    },
+    // headers: {
+    //     'X-Client': import.meta.env.VITE_APP_CLIENT_ID,
+    //     'X-Requested-With': 'XMLHttpRequest',
+    // },
 })
 
 const $axios = axios.create({
     baseURL: isDev
-    ? '/getmaster-v2'
+    ? '/api/'
     : `${import.meta.env.VITE_APP_API_URL}/master`,
     headers: {
         'X-Client': import.meta.env.VITE_APP_CLIENT_ID,
@@ -36,7 +37,7 @@ const $axios = axios.create({
 
 const $axAcrticle = axios.create({
     baseURL: isDev ?
-    '/article-api-v2'
+    '/api/'
     : `${import.meta.env.VITE_APP_API_URL}/`,
     headers: {
         'X-Client': import.meta.env.VITE_APP_CLIENT_ID,
@@ -132,43 +133,43 @@ $axInstance.interceptors.response.use(function (response) {
     return Promise.reject(error);
 });
 
-export const setCookie = (name, value, days)=>{
-    let expires = "";
-    if (days) {
-        const date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    if (window.location.protocol === 'https:'){
-        document.cookie = `${name}=${value || ""}${expires}; path=/; Secure; SameSite=Strict`;
-    }else{
-        document.cookie = `${name}=${value || ""}${expires}; path=/; SameSite=Strict`;
-    }
-}
+// export const setCookie = (name, value, days)=>{
+//     let expires = "";
+//     if (days) {
+//         const date = new Date();
+//         date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+//         expires = "; expires=" + date.toUTCString();
+//     }
+//     if (window.location.protocol === 'https:'){
+//         document.cookie = `${name}=${value || ""}${expires}; path=/; Secure; SameSite=Strict`;
+//     }else{
+//         document.cookie = `${name}=${value || ""}${expires}; path=/; SameSite=Strict`;
+//     }
+// }
 
-export const getCookie = (name=undefined) =>{
-    const curvalue = document.cookie || ''
-    const value = `; ${curvalue}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-}
+// export const getCookie = (name=undefined) =>{
+//     const curvalue = document.cookie || ''
+//     const value = `; ${curvalue}`;
+//     const parts = value.split(`; ${name}=`);
+//     if (parts.length === 2) return parts.pop().split(';').shift();
+// }
 
-export const delCookie = (name=undefined) =>{
-    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-}
+// export const delCookie = (name=undefined) =>{
+//     document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+// }
 
-export const setAuthToken = (payload) => {
-    if (payload) {
-        // console.log({setAuthToken:payload});
-        const {access_token,refresh_token,expires_in,token_type,thirdParty} = payload;
-        akses = {access_token,refresh_token,expires_in,token_type};
-        curdapi2 = thirdParty;
-        $axInstance.defaults.headers['Authorization'] = `${token_type} ${access_token}`;
+// export const setAuthToken = (payload) => {
+//     if (payload) {
+//         // console.log({setAuthToken:payload});
+//         const {access_token,refresh_token,expires_in,token_type,thirdParty} = payload;
+//         akses = {access_token,refresh_token,expires_in,token_type};
+//         curdapi2 = thirdParty;
+//         $axInstance.defaults.headers['Authorization'] = `${token_type} ${access_token}`;
 
-    } else {
-        delete $axInstance.defaults.headers['Authorization'];
-    }
-};  
+//     } else {
+//         delete $axInstance.defaults.headers['Authorization'];
+//     }
+// };
 
 export const axDT = async (url,data,callback,settings,method='post')=>{
     if (akses?.access_token) {

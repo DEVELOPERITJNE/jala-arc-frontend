@@ -1,4 +1,4 @@
-import { setAuthToken,setCookie,getCookie,delCookie } from './api';
+// import { setAuthToken,setCookie,getCookie,delCookie } from './api';
 import {$axInstance} from './api.js';
 import CryptoJS from 'crypto-js';
 import { AUTH_TOKEN,AUTH_USER,SOCKET_CLIENT,AUTH_GET_USER,AUTH_PROFILE,AUTH_STATUS,AUTH_LOGOUT,AUTH_DESTROY_SESSION,AUTHENTICATOR,LOGOUT,DELETEALL_COOKIES } from './actions/reqApi.js';
@@ -12,7 +12,7 @@ const state = {
     SOCKET_CLIENT:{},
     AUTH_PROFILE:{},
     // AUTH_STATUS: getCookie('dapi2') || false,
-    AUTH_STATUS: true,
+    AUTH_STATUS: false,
 };
 
 const getters = {
@@ -44,7 +44,7 @@ const actions = {
         try {
             if(!(payload instanceof Object)) throw 'invalid token';
             commit(AUTH_TOKEN,payload);
-            setAuthToken(payload);
+            // setAuthToken(payload);
             commit(AUTH_STATUS,true);
         } catch (error) {
             commit(AUTH_STATUS,false);
