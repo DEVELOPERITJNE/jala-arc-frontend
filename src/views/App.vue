@@ -1,6 +1,18 @@
 <template>
     <v-app>
-        <Header />
+        <!-- drawer badjingan -->
+
+        <v-navigation-drawer
+            v-model="drawer_app"
+            location="right"
+            class="control-sidebar"
+            width="450"
+            temporary
+            scrim="false"
+        >
+            <div class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button"></div>
+        </v-navigation-drawer>
+        <Header @toggle-drawer="toggleDrawer" />
         <v-main class="main-wrapper">
             <router-view></router-view>
         </v-main>
@@ -26,7 +38,15 @@ export default {
         Header,
         Footer,
     },
+    data() {
+        return { 
+            drawer_app: false,
+        }
+    },
     methods: {
+        toggleDrawer() {
+            this.drawer_app = !this.drawer_app
+        },
         ...mapActions({
             act_LIBRARY_GET_CATEGORY: 'library/'+LIBRARY_GET_CATEGORY,
             act_LIBRARY_GET_USER: 'user/'+LIBRARY_GET_USER,
@@ -34,8 +54,8 @@ export default {
     },
     created() {
         this.$nextTick(async()=>{
-            await this.act_LIBRARY_GET_CATEGORY();
-            await this.act_LIBRARY_GET_USER();
+            // await this.act_LIBRARY_GET_CATEGORY();
+            // await this.act_LIBRARY_GET_USER();
         })
     },
 }

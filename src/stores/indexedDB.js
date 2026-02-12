@@ -1,37 +1,3 @@
-// indexedDB.js (utility functions)
-
-// export async function openDatabase(storeName) {
-//   return new Promise((resolve, reject) => {
-//     const request = indexedDB.open('dbmaster');
-
-//     request.onsuccess = (event) => {
-//       const db = event.target.result;
-//       const currVersion = db.version;
-//       db.close();
-
-//       const correctRequest = indexedDB.open('dbmaster', currVersion);
-//       correctRequest.onupgradeneeded = (event) => {
-//         const db = event.target.result;
-//         if (!db.objectStoreNames.contains(storeName)) {
-//           db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true });
-//         }
-//       };
-
-//       correctRequest.onsuccess = (e) => {
-//         resolve(e.target.result);
-//       };
-
-//       correctRequest.onerror = (e) => {
-//         reject(e.target.error);
-//       };
-//     };
-
-//     request.onerror = (e) => {
-//       reject(e.target.error);
-//     };
-//   });
-// }
-
 export async function openDatabase(storeName) {
   return new Promise((resolve, reject) => {
     const checkRequest = indexedDB.open('dbmaster');

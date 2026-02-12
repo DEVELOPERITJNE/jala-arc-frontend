@@ -30,6 +30,9 @@ const vuetify = createVuetify({
                     success: '#4CAF50',
                     warning: '#FFC107',
                     ligthCustom: '#F2F9FF',
+                    arcPurple: '#806EE1',
+                    arcBlue: '#5A8EE9',
+                    arcPink: '#F39AA5'
                 }
             }
         }

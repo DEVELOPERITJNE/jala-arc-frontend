@@ -1,4 +1,4 @@
-import {$axios, $axAcrticle} from '../stores/api.js';
+import {$axAcrticle} from '../stores/api.js';
 import {LIBRARY_DEL_REF_CODE, PREV_ROUTES_NAME, SET_MY_DOCUMENT_PAGE, LIBRARY_DEL_CATEGORY, LIBRARY_CREATE_CATEGORY, LIBRARY_GET_VISIBILITY, LIBRARY_GET_ARTICLES_SINGLE, LIBRARY_UPDATE_MY_DOC, LIBRARY_ARTICLES_ANALYZE, LIBRARY_CREATE_BULK, LIBRARY_CREATE_MY_DOC, LIBRARY_GET_STATUSES, LIBRARY_GET_MY_DOC, LIBRARY_BOOKMARK_ARTICLES_DEL, LIBRARY_BOOKMARK_ARTICLES, LIBRARY_DELETE_ARTICLES, LIBRARY_GET_CATEGORY,LIBRARY_GET_ARTICLES, USER_GET_PROFILE,API_REQUEST, USER_GET_SESSION, USER_CURRENT_SESSION } from './actions/reqApi';
 
 const state = {
@@ -109,85 +109,85 @@ const actions = {
         commit('PREV_ROUTES_NAME', name);
     },
 
-    [LIBRARY_GET_STATUSES]:async ({commit, rootGetters, rootState})=>{
-        return new Promise((resolve,reject)=>{
-            $axios.get('/statuses').then(resp => {
-                commit(LIBRARY_GET_STATUSES,resp);
-                resolve(resp);
-            }).catch(err => {
-                commit(LIBRARY_GET_STATUSES,{});
-                commit(API_REQUEST,'error');
-                reject(err.response);
-            });
-        });
-    },
+    // [LIBRARY_GET_STATUSES]:async ({commit, rootGetters, rootState})=>{
+    //     return new Promise((resolve,reject)=>{
+    //         $axios.get('/statuses').then(resp => {
+    //             commit(LIBRARY_GET_STATUSES,resp);
+    //             resolve(resp);
+    //         }).catch(err => {
+    //             commit(LIBRARY_GET_STATUSES,{});
+    //             commit(API_REQUEST,'error');
+    //             reject(err.response);
+    //         });
+    //     });
+    // },
 
-    [LIBRARY_GET_CATEGORY]:async ({commit, rootGetters, rootState})=>{
-        return new Promise((resolve,reject)=>{
-            $axios.get('/categories').then(resp => {
-                commit(LIBRARY_GET_CATEGORY,resp);
-                resolve(resp);
-            }).catch(err => {
-                commit(LIBRARY_GET_CATEGORY,{});
-                commit(API_REQUEST,'error');
-                reject(err.response);
-            });
-        });
-    },
+    // [LIBRARY_GET_CATEGORY]:async ({commit, rootGetters, rootState})=>{
+    //     return new Promise((resolve,reject)=>{
+    //         $axios.get('/categories').then(resp => {
+    //             commit(LIBRARY_GET_CATEGORY,resp);
+    //             resolve(resp);
+    //         }).catch(err => {
+    //             commit(LIBRARY_GET_CATEGORY,{});
+    //             commit(API_REQUEST,'error');
+    //             reject(err.response);
+    //         });
+    //     });
+    // },
 
-    [LIBRARY_GET_VISIBILITY]:async ({commit, rootGetters, rootState})=>{
-        return new Promise((resolve,reject)=>{
-            $axios.get('/visibilities').then(resp => {
-                commit(LIBRARY_GET_VISIBILITY,resp);
-                resolve(resp);
-            }).catch(err => {
-                commit(LIBRARY_GET_VISIBILITY,{});
-                commit(API_REQUEST,'error');
-                reject(err.response);
-            });
-        });
-    },
+    // [LIBRARY_GET_VISIBILITY]:async ({commit, rootGetters, rootState})=>{
+    //     return new Promise((resolve,reject)=>{
+    //         $axios.get('/visibilities').then(resp => {
+    //             commit(LIBRARY_GET_VISIBILITY,resp);
+    //             resolve(resp);
+    //         }).catch(err => {
+    //             commit(LIBRARY_GET_VISIBILITY,{});
+    //             commit(API_REQUEST,'error');
+    //             reject(err.response);
+    //         });
+    //     });
+    // },
 
-    [LIBRARY_GET_MY_DOC]:async ({commit, rootGetters, rootState})=>{
-        return new Promise((resolve,reject)=>{
-            // const visitor_id = rootState.auth.AUTH_USER?.id;
+    // [LIBRARY_GET_MY_DOC]:async ({commit, rootGetters, rootState})=>{
+    //     return new Promise((resolve,reject)=>{
+    //         // const visitor_id = rootState.auth.AUTH_USER?.id;
 
-            $axAcrticle.post('/articles/getlist', null ,{
-                params: {
-                    visitor_id: rootState.auth.AUTH_USER.id,
-                    author_id: rootState.auth.AUTH_USER.id,
-                }
-            }).then(resp => {
-                commit(LIBRARY_GET_MY_DOC,resp);
-                resolve(resp);
-            }).catch(err => {
-                commit(LIBRARY_GET_MY_DOC,null);
-                commit(API_REQUEST,'error');
-                reject(err.response);
-            });
-        });
-    },
+    //         $axAcrticle.post('/articles/getlist', null ,{
+    //             params: {
+    //                 visitor_id: rootState.auth.AUTH_USER.id,
+    //                 author_id: rootState.auth.AUTH_USER.id,
+    //             }
+    //         }).then(resp => {
+    //             commit(LIBRARY_GET_MY_DOC,resp);
+    //             resolve(resp);
+    //         }).catch(err => {
+    //             commit(LIBRARY_GET_MY_DOC,null);
+    //             commit(API_REQUEST,'error');
+    //             reject(err.response);
+    //         });
+    //     });
+    // },
 
-    [LIBRARY_GET_ARTICLES]: async ({ commit, rootState }, payload = {}) => {
-        return new Promise((resolve, reject) => {
-            const params = {
-                visitor_id: rootState.auth.AUTH_USER.id,
-                ...(payload.v ? { visibility_id: payload.v } : {}),
-                ...(payload.s ? { status_id: payload.s} : {}),
-            };
+    // [LIBRARY_GET_ARTICLES]: async ({ commit, rootState }, payload = {}) => {
+    //     return new Promise((resolve, reject) => {
+    //         const params = {
+    //             visitor_id: rootState.auth.AUTH_USER.id,
+    //             ...(payload.v ? { visibility_id: payload.v } : {}),
+    //             ...(payload.s ? { status_id: payload.s} : {}),
+    //         };
 
-            $axAcrticle.post('/articles/getlist', null, { params })
-                .then(resp => {
-                    commit(LIBRARY_GET_ARTICLES, resp);
-                    resolve(resp);
-                })
-                .catch(err => {
-                    commit(LIBRARY_GET_ARTICLES, null);
-                    commit(API_REQUEST, 'error');
-                    reject(err.response);
-                });
-        });
-    },
+    //         $axAcrticle.post('/articles/getlist', null, { params })
+    //             .then(resp => {
+    //                 commit(LIBRARY_GET_ARTICLES, resp);
+    //                 resolve(resp);
+    //             })
+    //             .catch(err => {
+    //                 commit(LIBRARY_GET_ARTICLES, null);
+    //                 commit(API_REQUEST, 'error');
+    //                 reject(err.response);
+    //             });
+    //     });
+    // },
 
     // [LIBRARY_CREATE_MY_DOC]: async ({ commit }, { payload, formData }) => {
     //     return new Promise((resolve, reject) => {
@@ -215,44 +215,44 @@ const actions = {
     // },
 
 
-    [LIBRARY_CREATE_CATEGORY]: async ({ commit },formData) => {
-        return new Promise((resolve, reject) => {
-            $axios.post('/categories',formData)
-            .then(resp => {
-                commit(LIBRARY_CREATE_CATEGORY, resp);
-                resolve(resp);
-            })
-            .catch(err => {
-                commit(LIBRARY_CREATE_CATEGORY, null);
-                commit(API_REQUEST, 'error');
-                reject(err.response);
-            });
-        });
-    },
+    // [LIBRARY_CREATE_CATEGORY]: async ({ commit },formData) => {
+    //     return new Promise((resolve, reject) => {
+    //         $axios.post('/categories',formData)
+    //         .then(resp => {
+    //             commit(LIBRARY_CREATE_CATEGORY, resp);
+    //             resolve(resp);
+    //         })
+    //         .catch(err => {
+    //             commit(LIBRARY_CREATE_CATEGORY, null);
+    //             commit(API_REQUEST, 'error');
+    //             reject(err.response);
+    //         });
+    //     });
+    // },
 
-    [LIBRARY_CREATE_MY_DOC]: async ({ commit }, { payload, formData }) => {
-        for (const key in payload) {
-            if (payload[key] !== undefined && payload[key] !== null) {
-                formData.append(key, payload[key]);
-            }
-        }
-        return new Promise((resolve, reject) => {
-            $axAcrticle.post('/articles/', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-            .then(resp => {
-                commit(LIBRARY_CREATE_MY_DOC, resp);
-                resolve(resp);
-            })
-            .catch(err => {
-                commit(LIBRARY_CREATE_MY_DOC, null);
-                commit(API_REQUEST, 'error');
-                reject(err.response);
-            });
-        });
-    },
+    // [LIBRARY_CREATE_MY_DOC]: async ({ commit }, { payload, formData }) => {
+    //     for (const key in payload) {
+    //         if (payload[key] !== undefined && payload[key] !== null) {
+    //             formData.append(key, payload[key]);
+    //         }
+    //     }
+    //     return new Promise((resolve, reject) => {
+    //         $axAcrticle.post('/articles/', formData, {
+    //             headers: {
+    //                 'Content-Type': 'multipart/form-data'
+    //             }
+    //         })
+    //         .then(resp => {
+    //             commit(LIBRARY_CREATE_MY_DOC, resp);
+    //             resolve(resp);
+    //         })
+    //         .catch(err => {
+    //             commit(LIBRARY_CREATE_MY_DOC, null);
+    //             commit(API_REQUEST, 'error');
+    //             reject(err.response);
+    //         });
+    //     });
+    // },
 
 
     // [LIBRARY_CREATE_MY_DOC]: async ({ commit },{payload, formData}) => {
@@ -273,24 +273,24 @@ const actions = {
     // },
 
 
-    [LIBRARY_UPDATE_MY_DOC]: async ({ commit },{payload, formData}) => {
-        for (const key in payload) {
-            if (key !== 'id' && payload[key] !== undefined && payload[key] !== null) {
-                formData.append(key, payload[key]);
-            }
-        }
-        return new Promise((resolve, reject) => {
-            $axAcrticle.put(`/articles/${payload.id}`, formData)
-            .then(resp => {
-                resolve(resp);
-            })
-            .catch(err => {
-                // commit(LIBRARY_UPDATE_MY_DOC, null);
-                commit(API_REQUEST, 'error');
-                reject(err.response);
-            });
-        });
-    },
+    // [LIBRARY_UPDATE_MY_DOC]: async ({ commit },{payload, formData}) => {
+    //     for (const key in payload) {
+    //         if (key !== 'id' && payload[key] !== undefined && payload[key] !== null) {
+    //             formData.append(key, payload[key]);
+    //         }
+    //     }
+    //     return new Promise((resolve, reject) => {
+    //         $axAcrticle.put(`/articles/${payload.id}`, formData)
+    //         .then(resp => {
+    //             resolve(resp);
+    //         })
+    //         .catch(err => {
+    //             // commit(LIBRARY_UPDATE_MY_DOC, null);
+    //             commit(API_REQUEST, 'error');
+    //             reject(err.response);
+    //         });
+    //     });
+    // },
     // [LIBRARY_UPDATE_MY_DOC]: async ({ commit },{payload, formData}) => {
     //     return new Promise((resolve, reject) => {
     //         $axAcrticle.put(`/articles/${payload.id}`, formData, {
@@ -317,112 +317,112 @@ const actions = {
     //     });
     // },
 
-    [LIBRARY_DEL_REF_CODE]: async ({ commit }, payload) => {
-        return new Promise((resolve, reject) => {
-            $axAcrticle.delete(`/articles/reference/${payload.id}/${payload.ref_code}`)
-            .then(resp => {
-                commit(LIBRARY_DEL_REF_CODE, resp);
-                resolve(resp);
-            })
-            .catch(err => {
-                commit(LIBRARY_DEL_REF_CODE, null);
-                // commit(API_REQUEST, 'error');
-                reject(err.response);
-            });
-        });
-    },
+    // [LIBRARY_DEL_REF_CODE]: async ({ commit }, payload) => {
+    //     return new Promise((resolve, reject) => {
+    //         $axAcrticle.delete(`/articles/reference/${payload.id}/${payload.ref_code}`)
+    //         .then(resp => {
+    //             commit(LIBRARY_DEL_REF_CODE, resp);
+    //             resolve(resp);
+    //         })
+    //         .catch(err => {
+    //             commit(LIBRARY_DEL_REF_CODE, null);
+    //             // commit(API_REQUEST, 'error');
+    //             reject(err.response);
+    //         });
+    //     });
+    // },
 
-    [LIBRARY_CREATE_BULK]: async ({ commit },{payload, formData}) => {
-        for (const key in payload) {
-            if (payload[key] !== undefined && payload[key] !== null) {
-                formData.append(key, payload[key]);
-            }
-        }
-        return new Promise((resolve, reject) => {
-            $axAcrticle.post('/articles/createbulk', formData)
-            .then(resp => {
-                commit(LIBRARY_CREATE_BULK, resp);
-                resolve(resp);
-            })
-            .catch(err => {
-                commit(LIBRARY_CREATE_BULK, null);
-                commit(API_REQUEST, 'error');
-                reject(err.response);
-            });
-        });
-    },
+    // [LIBRARY_CREATE_BULK]: async ({ commit },{payload, formData}) => {
+    //     for (const key in payload) {
+    //         if (payload[key] !== undefined && payload[key] !== null) {
+    //             formData.append(key, payload[key]);
+    //         }
+    //     }
+    //     return new Promise((resolve, reject) => {
+    //         $axAcrticle.post('/articles/createbulk', formData)
+    //         .then(resp => {
+    //             commit(LIBRARY_CREATE_BULK, resp);
+    //             resolve(resp);
+    //         })
+    //         .catch(err => {
+    //             commit(LIBRARY_CREATE_BULK, null);
+    //             commit(API_REQUEST, 'error');
+    //             reject(err.response);
+    //         });
+    //     });
+    // },
 
-    [LIBRARY_BOOKMARK_ARTICLES]:async ({commit}, formData)=>{
-        return new Promise((resolve,reject)=>{
-            $axAcrticle.post(`/articles/bookmark`, formData).then(resp => {
-                commit(LIBRARY_BOOKMARK_ARTICLES,resp);
-                resolve(resp);
-            }).catch(err => {
-                commit(LIBRARY_BOOKMARK_ARTICLES,null);
-                commit(API_REQUEST,'error');
-                reject(err);
-            });
-        });
-    },
+    // [LIBRARY_BOOKMARK_ARTICLES]:async ({commit}, formData)=>{
+    //     return new Promise((resolve,reject)=>{
+    //         $axAcrticle.post(`/articles/bookmark`, formData).then(resp => {
+    //             commit(LIBRARY_BOOKMARK_ARTICLES,resp);
+    //             resolve(resp);
+    //         }).catch(err => {
+    //             commit(LIBRARY_BOOKMARK_ARTICLES,null);
+    //             commit(API_REQUEST,'error');
+    //             reject(err);
+    //         });
+    //     });
+    // },
 
-    [LIBRARY_BOOKMARK_ARTICLES_DEL]:async ({commit, rootState}, article_id)=>{
-        return new Promise((resolve,reject)=>{
-            $axAcrticle.delete(`/articles/bookmark/${article_id}`,{
-                params: {
-                    user_id: rootState.auth.AUTH_USER.id,
-                }
-            }).then(resp => {
-                commit(LIBRARY_BOOKMARK_ARTICLES_DEL,resp);
-                resolve(resp);
-            }).catch(err => {
-                commit(LIBRARY_BOOKMARK_ARTICLES_DEL,null);
-                commit(API_REQUEST,'error');
-                reject(err);
-            });
-        });
-    },
+    // [LIBRARY_BOOKMARK_ARTICLES_DEL]:async ({commit, rootState}, article_id)=>{
+    //     return new Promise((resolve,reject)=>{
+    //         $axAcrticle.delete(`/articles/bookmark/${article_id}`,{
+    //             params: {
+    //                 user_id: rootState.auth.AUTH_USER.id,
+    //             }
+    //         }).then(resp => {
+    //             commit(LIBRARY_BOOKMARK_ARTICLES_DEL,resp);
+    //             resolve(resp);
+    //         }).catch(err => {
+    //             commit(LIBRARY_BOOKMARK_ARTICLES_DEL,null);
+    //             commit(API_REQUEST,'error');
+    //             reject(err);
+    //         });
+    //     });
+    // },
 
-    [LIBRARY_ARTICLES_ANALYZE]:async ({commit}, formData)=>{
-        return new Promise((resolve,reject)=>{
-            $axAcrticle.post(`/articles/analyze`, formData).then(resp => {
-                commit(LIBRARY_ARTICLES_ANALYZE,resp);
-                resolve(resp);
-            }).catch(err => {
-                commit(LIBRARY_ARTICLES_ANALYZE,null);
-                commit(API_REQUEST,'error');
-                reject(err);
-            });
-        });
-    },
+    // [LIBRARY_ARTICLES_ANALYZE]:async ({commit}, formData)=>{
+    //     return new Promise((resolve,reject)=>{
+    //         $axAcrticle.post(`/articles/analyze`, formData).then(resp => {
+    //             commit(LIBRARY_ARTICLES_ANALYZE,resp);
+    //             resolve(resp);
+    //         }).catch(err => {
+    //             commit(LIBRARY_ARTICLES_ANALYZE,null);
+    //             commit(API_REQUEST,'error');
+    //             reject(err);
+    //         });
+    //     });
+    // },
 
-    // get single articles
+    // // get single articles
 
-    [LIBRARY_GET_ARTICLES_SINGLE]:async ({commit}, article_id)=>{
-        return new Promise((resolve,reject)=>{
-            $axAcrticle.get(`/articles/${article_id}`,{
-            }).then(resp => {
-                commit(LIBRARY_GET_ARTICLES_SINGLE,resp);
-                resolve(resp);
-            }).catch(err => {
-                commit(LIBRARY_GET_ARTICLES_SINGLE,null);
-                commit(API_REQUEST,'error');
-                reject(err);
-            });
-        });
-    },
+    // [LIBRARY_GET_ARTICLES_SINGLE]:async ({commit}, article_id)=>{
+    //     return new Promise((resolve,reject)=>{
+    //         $axAcrticle.get(`/articles/${article_id}`,{
+    //         }).then(resp => {
+    //             commit(LIBRARY_GET_ARTICLES_SINGLE,resp);
+    //             resolve(resp);
+    //         }).catch(err => {
+    //             commit(LIBRARY_GET_ARTICLES_SINGLE,null);
+    //             commit(API_REQUEST,'error');
+    //             reject(err);
+    //         });
+    //     });
+    // },
 
-    [LIBRARY_DELETE_ARTICLES]: ({ commit },id) => {
-        return $axAcrticle({
-            method:'delete',
-            url:`articles/${id}`,
-        });
-    },
-    [LIBRARY_DEL_CATEGORY]: ({ commit },id) => {
-        return $axios({
-            method:'delete',
-            url:`categories/${id}`,
-        });
-    },
+    // [LIBRARY_DELETE_ARTICLES]: ({ commit },id) => {
+    //     return $axAcrticle({
+    //         method:'delete',
+    //         url:`articles/${id}`,
+    //     });
+    // },
+    // [LIBRARY_DEL_CATEGORY]: ({ commit },id) => {
+    //     return $axios({
+    //         method:'delete',
+    //         url:`categories/${id}`,
+    //     });
+    // },
 };
 export default {
     namespaced: true,

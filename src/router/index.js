@@ -1,11 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 import HomeView from '../views/BaseHomeView.vue';
-import LibraryView from '../views/BaseLibraryAllView.vue';
-import MyDocumentView from '../views/BaseMyDocument.vue';
-import ManageView from '../views/BaseManageView.vue';
-import CreateDocumentView from '../views/CreateDocument.vue';
 import BaseIndex from '../views/BaseIndex.vue';
+import BaseAgenPanel from '../views/BaseAgenPanel.vue';
 
 const routes = [
     {
@@ -23,47 +20,14 @@ const routes = [
                 },
             },
             {
-                path: 'library',
-                name: 'Library.view',
-                title: 'Library',
-                component: LibraryView,
-                meta: {
-                    title: 'Library',
-                    breadcrumb: 'Library'
-                }
-            },
-            {
-                path: 'document',
-                name: 'MyDocument.list.view',
-                title: 'My Document',
-                component: MyDocumentView,
-                meta: {
-                    title: 'My Document',
-                    breadcrumb: 'My Document'
+                path: 'agenpanel',
+                name: 'agenpanel.view',
+                component: BaseAgenPanel,
+                meta: { 
+                    title: 'Agen Panel',
+                    breadcrumb: 'Agen Panel'
                 },
             },
-            {
-                path: 'document/create',
-                name: 'MyDocument.create.view',
-                title: 'Create Document',
-                component: CreateDocumentView,
-                meta: {
-                    title: 'Document Create',
-                    breadcrumb: 'Create',
-                    parent : 'MyDocument.list.view'
-                },
-            },
-            {
-                path: 'manage',
-                name: 'ManageView.view',
-                title: 'Manage Document',
-                component: ManageView,
-                meta: {
-                    title: 'Manage Document',
-                    breadcrumb: 'Manage Document',
-
-                }
-            }
         ]
     }
 ]
@@ -74,7 +38,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const defTitle = 'Library';
+    const defTitle = 'ARC';
     document.title = `${defTitle} | ${to.meta.title}` || defTitle;
     next()
 })

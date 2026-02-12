@@ -1,152 +1,71 @@
 <template>
     <v-container class="h-100" fluid>
-        <v-row justify="center" class="h-100 w-100">
-            <v-col cols="12" md="4">
-                <div class="images h-100 d-flex justify-center align-center">
-                    <img alt="lib-pict.png" :src="$appInfo.ftpURL+'/elibrary/Foto/home-lib-pict.png'" />
+        <v-row justify="center">
+            <v-col cols="12">
+                <div class="d-flex flex-row">
+                    <h1>Welcome to &#160;</h1>
+                    <h1 class="text-arcPurple">ARC</h1>
                 </div>
             </v-col>
-            <v-col cols="12" md="8">
-                <div class="px-10 d-flex flex-column justify-center h-100">
-                    <div id="header-title" class="">
-                        <h2 class="fw-900">{{ headerTitle }}</h2>
-                    </div>
-                    <div>
-                        <p class="fw-900">{{ bodyTxt }}</p>
-                        <div id="search-bar" class="my-5">
-                             <v-text-field
-                                v-model="filters.searchField"
-                                append-inner-icon="mdi-magnify"
-                                density="compact"
-                                label="Search name or document code"
-                                variant="outlined"
-                                hide-details
-                                single-line
-                                clearable
-                                @keyup.enter=ahbacodFindTxt(filters.searchField)
-                            ></v-text-field>
-                        </div>
-                    </div>
-                    <div class="d-flex flex-row w-100">
-                        <div class="filter-dropdown">
-                            <v-menu location="end">
-                                <template v-slot:activator="{ props }">
-                                    <v-btn
-                                        color="primary"
-                                        v-bind="props"
-                                        variant="outlined"
-                                    >
-                                        <v-icon>
-                                            mdi-menu-down
-                                        </v-icon>
-                                        Filter
-                                    </v-btn>
-                                </template>
-
-                                <v-list>
-                                    <v-list-item
-                                        v-for="(item, index) in items"
-                                        :key="index"
-                                        :value="index"
-                                    >
-                                        <template v-if="index === 1">
-                                            <v-menu open-on-click offset-x location="end">
-                                                <template v-slot:activator="{ props: subProps1 }">
-                                                    <v-list-item v-bind="subProps1">
-                                                        <v-list-item-title @click="togglePopular()">
-                                                            {{ item }}
-                                                        </v-list-item-title>
-                                                    </v-list-item>
-                                                </template>
-                                            </v-menu>
-                                        </template>
-                                        <template v-else-if="index === 2">
-                                            <v-menu open-on-click offset-x location="end">
-                                                <template v-slot:activator="{ props: subProps2 }">
-                                                    <v-list-item v-bind="subProps2">
-                                                        <v-list-item-title>
-                                                            {{ item }}
-                                                            <v-icon class="ml-auto">mdi-chevron-right</v-icon>
-                                                        </v-list-item-title>
-                                                    </v-list-item>
-                                                </template>
-                                                <v-list>
-                                                    <v-date-picker elevation="24" v-model="filters.findDateUpload" @update:model-value="onDatePicked" @click.stop></v-date-picker>
-                                                </v-list>
-                                            </v-menu>
-                                        </template>
-                                        <template v-else-if="index === 3">
-                                            <v-menu open-on-click offset-x location="end" origin="bottom left" transition="scale-transition">
-                                                <template v-slot:activator="{ props: subProps3 }">
-                                                    <v-list-item v-bind="subProps3">
-                                                        <v-list-item-title>
-                                                            {{ item }}
-                                                            <v-icon class="ml-auto">mdi-chevron-right</v-icon>
-                                                        </v-list-item-title>
-                                                    </v-list-item>
-                                                </template>
-                                                <v-card>
-                                                    <div style="position: sticky; top: 0; z-index: 10; background: white;">
-                                                        <v-text-field
-                                                            class="ma-2"
-                                                            @click.stop
-                                                            v-model="findUser"
-                                                            placeholder="Search item..."
-                                                            density="compact"
-                                                            hide-details
-                                                            append-inner-icon="mdi-magnify"
-                                                            clearable
-                                                        />
-                                                    </div>
-                                                    <div style="max-height: 20rem; min-width: 18rem;">
-                                                        <v-list>
-                                                            <template v-if="listUser.length">
-                                                                <v-list-item v-for="(i, idx) in listUser" :key="idx">
-                                                                    <v-list-item-title @click="findAuthor(idx)">
-                                                                        {{ i.name }}
-                                                                    </v-list-item-title>
-                                                                </v-list-item>
-                                                            </template>
-                                                            <template v-else>
-                                                                <v-list-item>
-                                                                    <v-list-item-title class="text-grey text-center">No data found</v-list-item-title>
-                                                                </v-list-item>
-                                                            </template>
-                                                        </v-list>
-                                                    </div>
-                                                </v-card>
-                                            </v-menu>
-                                        </template>
-                                        <template v-else>
-                                            <v-list-item>
-                                                <v-list-item-title @click="toggleBookmark()">{{ item }}</v-list-item-title>
-                                            </v-list-item>
-                                        </template>
-                                    </v-list-item>
-                                </v-list>
-                            </v-menu>
-                        </div>
-                        <div class="d-flex parent-category-scroll ml-2">
-                            <v-btn variant="tonal">
-                                <v-icon @click="$scrollLeftOnce($refs.scrollContainer,100,'left')" @mousedown="$startScroll($refs.scrollContainer, 'left')" @mouseup="$stopScroll" @mouseleave="$stopScroll">
-                                    mdi mdi-chevron-left
-                                </v-icon>
-                            </v-btn>
-                            <div class="d-flex category-scroll" ref="scrollContainer" @mousedown="$startDrag($event, $refs.scrollContainer)" @mousemove="$onDrag($event, $refs.scrollContainer)" @mouseup="$stopDrag" @mouseleave="$stopDrag">
-                                <div v-for="(i, idx) in getLIBRARY_GET_CATEGORY.data" :key="idx">
-                                    <v-btn variant="tonal" class="mx-1 text-none" @click="findCategory(i.id)">
-                                        {{ i.name }}
-                                    </v-btn>
-                                </div>
-                            </div>
-                            <v-btn variant="tonal" @click="$scrollLeftOnce($refs.scrollContainer,100,'right')" @mousedown="$startScroll($refs.scrollContainer, 'right')" @mouseup="$stopScroll" @mouseleave="$stopScroll">
-                                <v-icon>
-                                    mdi mdi-chevron-right
-                                </v-icon>
-                            </v-btn>
-                        </div>
-                    </div>
+        </v-row>
+        <v-row class="mb-10 pb-10">
+            <v-col cols="12">
+                <div class="d-flex flex-row">
+                    <h1 class="_tytyd text-arcPurple">{{ displayedText  }}</h1>
                 </div>
+            </v-col>
+        </v-row>
+        <v-row class="ma-0 align-stretch _tolol">
+            <v-col cols="12" md="4" class="ps-0">
+                <v-img
+                    :src="imgHomeFinance"
+                    class="hero-image-fnc pa-0"
+                />
+            </v-col>
+
+            <!-- CONTENT -->
+            <v-col cols="12" md="8" class="pa-0">
+                <h1 class="mb-4 ms-5">FINANCE PANEL</h1>
+                <div class="_custom_container_fnc bg-arcPurple">
+
+                <div class="content-inside-fnc ps-5">
+                    <h2 class="mb-6">
+                        Manage Finance Data & Generate Agent Reports.
+                    </h2>
+
+                    <div class="d-flex ga-5 flex-wrap">
+                        <v-btn variant="tonal">Finance Dashboard</v-btn>
+                        <v-btn variant="tonal">Top 10 Report</v-btn>
+                        <v-btn variant="tonal">Data Management</v-btn>
+                        <v-btn variant="tonal">Validation</v-btn>
+                    </div>
+
+                    <div class="border-b-lg border-background mt-5"></div>
+                </div>
+                </div>
+            </v-col>
+        </v-row>
+        <v-row class="my-10 py-10">
+            <v-col cols="12" class="pa-0">
+                <v-container fluid>
+                    <div class="finance-wrapper">
+                        <!-- SHAPE + CONTENT -->
+                        <h1 class="ms-10 mb-6">AGENT PANEL</h1>
+                        <div class="_custom_container_agp bg-arcBlue d-flex align-center justify-start ps-10">
+                            <div class="content-inside ">
+                                <h2 class="mb-6">Manage Agent Data & Reconciliation</h2>
+                                <div class="d-flex ga-4">
+                                    <v-btn variant="tonal">Agent Dashboard</v-btn>
+                                    <v-btn variant="tonal">Reconciliation</v-btn>
+                                </div>
+                                <div class="border-b-lg border-background mt-5"></div>
+                            </div>
+                        </div>
+
+                        <!-- IMAGE (OVERLAY) -->
+                        <v-img :src="imgHomeAgenPanel" class="hero-image" />
+                    </div>
+                </v-container>
             </v-col>
         </v-row>
     </v-container>
@@ -154,97 +73,121 @@
 
 <style scoped>
 
-.v-list-item {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+._tolol { 
+    --v-layout-gap: 0px;
 }
-.v-list-item-title {
-    margin: 0.5rem !important;
-    padding: 0 !important;
+
+._tytyd { 
+    min-height: 60px;
+}
+
+.content-inside {
+    max-width: 900px;
+}
+
+.content-inside-fnc {
+    max-width: 900px;
+}
+
+.finance-wrapper {
+    left: -4rem;
+    top: 20px;
+    position: relative;
+    min-height: 500px;
+}
+
+._custom_container_agp {
+    min-height: 300px;
+    border-top-left-radius: 200px;
+    border-bottom-left-radius: 200px;
+    z-index: 1;
+}
+
+.hero-image {
+    position: absolute;
+    right: -110px;
+    top: -30px;
+    width: 500px;
+    z-index: 2;
+}
+
+.hero-image-fnc { 
+    height: 100%;
+    width: 100%;
+}
+
+.h1_babi {
+    margin-left: 32rem;
+}
+
+._custom_container_fnc {
+    margin: 0;
+    min-height: 300px;
+    border-top-right-radius: 200px;
+    border-bottom-right-radius: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: white;
 }
 
 </style>
 
 <script>
-
 import { mapGetters } from 'vuex';
-import { LIBRARY_GET_CATEGORY, LIBRARY_GET_USER } from '../stores/actions/reqApi'
+import imgHomeFinance from '../../src/assets/imgs/home-finance-panel.png'
+import imgHomeAgenPanel from '../assets/imgs/home-agent-panel.png'
+import _ractangle from '../assets/imgs/Rectangle-259.png'
 
 export default { 
     name: 'BaseHomeView',
-    data() { 
+    data() {
         return { 
-            headerTitle: 'Selamat Datang di eLibrary',
-            bodyTxt: `“ Satu Portal Untuk Semua. “`,
-            findUser: '',
-            filters: {
-                searchField: '',
-                findAuthor: '',
-                findBookmark: false,
-                findPopular: false,
-                findDateUpload: '',
-                findCategory: null,
-            },
-            items: [
-                'Bookmark',
-                'Popular',
-                'Date Upload',
-                'Release By',
-            ],
+            // image
+            imgHomeFinance,
+            imgHomeAgenPanel,
+            _ractangle,
+
+            // type write monyed
+            fullText: '',
+            displayedText: '',
+            speed: 120,
+            typingInterval: null,
+            pauseDelay: 1500,
         }
     },
     computed: { 
         ...mapGetters({
-            getLIBRARY_GET_CATEGORY: `library/${LIBRARY_GET_CATEGORY}`,
-            getLIBRARY_GET_USER: `user/${LIBRARY_GET_USER}`,
         }),
-        listUser() {
-            if(!this.findUser ) return this.getLIBRARY_GET_USER.data || 'No data found';
-
-            const keyword = this.findUser.toLowerCase();
-            return this.getLIBRARY_GET_USER.data.filter(u => 
-                u.name.toLowerCase().includes(keyword)
-            );
-        }
     },
     methods: {
-        ahbacodFindTxt(val) { 
-            this.filters.searchField = val;
-            this.pushWithParam();
+        async typeLoop() {
+            while (true) {
+                for (let i = 0; i <= this.fullText.length; i++) {
+                    this.displayedText = this.fullText.substring(0, i)
+                    await this.sleep(this.speed)
+                }
+
+                await this.sleep(this.pauseDelay)
+                for (let i = this.fullText.length; i >= 0; i--) {
+                    this.displayedText = this.fullText.substring(0, i)
+                    await this.sleep(this.deleteSpeed)
+                }
+                await this.sleep(500)
+            }
         },
-        onDatePicked(val) {
-            this.filters.findDateUpload = this.$date_format(val, 'YYYY-MM-DD');
-            this.pushWithParam();
-        },
-        togglePopular() { 
-            this.filters.togglePopular = !this.filters.togglePopular;
-            this.pushWithParam();
-        },
-        toggleBookmark() { 
-            this.filters.findBookmark = !this.filters.findBookmark;
-            this.pushWithParam();
-        },
-        findCategory(id) {
-            this.filters.findCategory = id;
-            this.pushWithParam();
-        },
-        findAuthor(authorName){ 
-            this.filters.findAuthor = authorName;
-            this.pushWithParam();
-        },
-        pushWithParam(params) {
-            Object.assign(this.filters, params);
-            this.$router.push({
-                name: 'Library.view',
-                query: this.filters
-            });
-        },
+        sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms))
+        }
     },
     mounted() {
-        this.$nextTick(() => { 
-            // console.log('category ',this.getLIBRARY_GET_CATEGORY.data)
-        })
+        this.fullText = "AGENT REVENUE COMMISION"
+        this.typeLoop()
+    },
+    beforeUnmount() {
+        clearInterval(this.typingInterval)
     }
+
 }
 
 </script>

@@ -3,10 +3,10 @@
         <div class="px-4 py-5 text-left w-100">
             <div class="d-flex justify-space-between">
                 <div>
-                    {{ new Date().getFullYear() }} — <strong>Nice Dream</strong>
+                    <strong>Jalaniaga Elok</strong>
                 </div>
                 <div class="d-flex flex-row">
-                    <p class="text-muted mr-2">Copyright &copy; 2025 <a :href="$appInfo.baseURL">{{$appInfo.appName}}</a></p>
+                    <p class="text-muted mr-2">Copyright &copy; {{ new Date().getFullYear() }} <a :href="$appInfo.baseURL">{{$appInfo.appName}}</a></p>
                     <b>Version</b> {{$appInfo.appVersion}}
                 </div>
             </div>

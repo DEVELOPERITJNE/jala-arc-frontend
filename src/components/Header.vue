@@ -6,11 +6,10 @@
             </v-app-bar-nav-icon>
             <v-app-bar-title>
                 <router-link :to="{name : 'Home.view'}" style="color: #223">
-                    Liberty City
+                    ARC
                 </router-link>
             </v-app-bar-title>
-            <v-spacer />
-            <div class="d-none d-md-flex my-0 router-wrapper ">
+            <div class="d-none d-md-flex my-0 router-wrapper text-center">
                 <router-link :to="{ name: 'Home.view' }" class="nav-link">
                     <v-btn 
                         text
@@ -21,56 +20,74 @@
                         Home
                     </v-btn>
                 </router-link>
+                <!-- dropdown -->
+                <div class="text-center">
+                    <v-menu open-on-hover>
+                        <template v-slot:activator="{props}" class="nav-link">
+                            <v-btn v-bind="props" class="py-0" color="secondary text-none">
+                                Finance Panel
+                            </v-btn>
+                        </template>
 
-                <router-link :to="{ name: 'Library.view' }" class="nav-link">
+                        <v-list>
+                            <v-list-item
+                                v-for="(item, index) in financePanelSubmenuList"
+                                :key="index"
+                                :value="index"
+                            >
+                                <v-list-item-title>{{ item.title }}</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                </div>
+                <router-link :to="{ name: 'agenpanel.view' }" class="nav-link">
                     <v-btn 
-                        text 
+                        text
                         class="py-0"
-                        :class="$route.name === 'Library.view' ? 'active-navbar-item' : ''"
+                        :class="$route.name === 'agenpanel.view' ? 'active-navbar-item' : ''"
                         color="secondary text-none"
                     >
-                        Library
+                        Agent Panel
                     </v-btn>
                 </router-link>
-
-                <router-link :to="{ name: 'MyDocument.list.view' }" class="nav-link">
+                <router-link :to="{ name: 'agenpanel.view' }" class="nav-link">
                     <v-btn 
-                        text 
+                        text
                         class="py-0"
-                        :class="['MyDocument.list.view','MyDocument.create.view'].includes($route.name) ? 'active-navbar-item' : ''"
+                        :class="$route.name === 'agenpanel.view' ? 'active-navbar-item' : ''"
                         color="secondary text-none"
                     >
-                        My Document
+                        Report
                     </v-btn>
                 </router-link>
+                <div class="text-center">
+                    <v-menu open-on-hover>
+                        <template v-slot:activator="{props}" class="nav-link">
+                            <v-btn v-bind="props" class="py-0" color="secondary text-none">
+                                Database
+                            </v-btn>
+                        </template>
 
-                <router-link :to="{ name: 'ManageView.view' }" class="nav-link">
-                    <v-btn 
-                        text 
-                        class="py-0"
-                        :class="$route.name === 'ManageView.view' ? 'active-navbar-item' : ''"
-                        color="secondary text-none"
-                    >
-                        Manage
-                    </v-btn>
-                </router-link>
+                        <v-list>
+                            <v-list-item
+                                v-for="(item, index) in databaseSubmenuList"
+                                :key="index"
+                                :value="index"
+                            >
+                                <v-list-item-title>{{ item.title }}</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                </div>
             </div>
 
             <v-spacer />
-            <!-- user detail  -->
-            <v-btn @click="toggleDrawer" color="primary">
+
+            <v-btn @click="$emit('toggle-drawer')" color="primary">
                 <v-icon>
                     mdi-dots-grid
                 </v-icon>
             </v-btn>
-            <v-navigation-drawer
-                v-model="drawer_app"
-                location="right"
-                color="#2E2E2E"
-                class="control-sidebar"
-            >
-                <div class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button"></div>
-            </v-navigation-drawer>
 
             <div class="d-none d-md-flex align-items-center">Hello, <span class="text-red mx-1 no-wrap">{{ AUTH_USER?.name }}</span></div>
             <v-menu offset-y>
@@ -134,23 +151,6 @@
                 >
                     <v-list-item-title>Home</v-list-item-title>
                 </v-list-item>
-
-                <v-list-item
-                    :to="{name : 'Library.view'}"
-                    :class="{ 'active-navbar-item': $route.name === 'Library.view' }"
-                    @click="drawer = false"
-                >
-                    <v-list-item-title>Library</v-list-item-title>
-                </v-list-item>
-
-                <v-list-item
-                    :to="{name : 'MyDocument.list.view'}"
-                    :class="['MyDocument.list.view','MyDocument.create.view'].includes($route.name) ? 'active-navbar-item' : ''"
-                    @click="drawer = false"
-                >
-                    <v-list-item-title>My Document</v-list-item-title>
-                </v-list-item>
-
             </v-list>
         </v-navigation-drawer>
         <!-- <router-view /> -->
@@ -234,6 +234,34 @@ export default {
                 'Settings',
                 'Logout',
             ],
+            financePanelSubmenuList:[
+                {
+                    title: 'Finance Dashboard',
+                    anchor: ''
+                },
+                {
+                    title: 'Top 10',
+                    anchor: ''
+                },
+                {
+                    title: 'Data Management',
+                    anchor: ''
+                },
+                {
+                    title: 'Validation',
+                    anchor: ''
+                },
+            ],
+            databaseSubmenuList: [
+                {
+                    title: 'Finance Dashboard',
+                    anchor: ''
+                },
+                {
+                    title: 'Change Log',
+                    anchor: ''
+                },
+            ]
         }
     },
     computed: { 

@@ -8,7 +8,7 @@
     "start": "node server.js",
     "dev": "concurrently \"vite\" \"node serverdev.js\"",
     "build": "vite build --mode production",
-    "build:dev":"vite build --mode development",
+    "build:dev": "vite build --mode development",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -24,7 +24,6 @@
     "http-proxy-middleware": "^3.0.5",
     "mobile-detect": "^1.4.5",
     "moment": "^2.30.1",
-    "pdfjs-dist": "^3.11.174",
     "url-search-params-polyfill": "^8.2.5",
     "vue": "^3.5.17",
     "vue-cookies": "^1.8.6",
