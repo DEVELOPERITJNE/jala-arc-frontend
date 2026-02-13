@@ -21,10 +21,10 @@
                     </v-btn>
                 </router-link>
                 <!-- dropdown -->
-                <div class="text-center">
-                    <v-menu open-on-hover>
-                        <template v-slot:activator="{props}" class="nav-link">
-                            <v-btn v-bind="props" class="py-0" color="secondary text-none">
+                <div class="text-center nav-link">
+                    <v-menu open-on-hover class="">
+                        <template v-slot:activator="{props}">
+                            <v-btn v-bind="props" class="py-0" color="secondary text-none" :class="$route.name === 'FinanceDashboard.view' ? 'active-navbar-item' : ''">
                                 Finance Panel
                             </v-btn>
                         </template>
@@ -35,7 +35,11 @@
                                 :key="index"
                                 :value="index"
                             >
-                                <v-list-item-title>{{ item.title }}</v-list-item-title>
+                                <v-list-item-title>
+                                    <router-link :to="{ name : item.toView}">
+                                        {{ item.title }}
+                                    </router-link>
+                                </v-list-item-title>
                             </v-list-item>
                         </v-list>
                     </v-menu>
@@ -60,7 +64,7 @@
                         Report
                     </v-btn>
                 </router-link>
-                <div class="text-center">
+                <div class="text-center nav-link">
                     <v-menu open-on-hover>
                         <template v-slot:activator="{props}" class="nav-link">
                             <v-btn v-bind="props" class="py-0" color="secondary text-none">
@@ -74,7 +78,9 @@
                                 :key="index"
                                 :value="index"
                             >
-                                <v-list-item-title>{{ item.title }}</v-list-item-title>
+                                <v-list-item-title>
+                                    {{ item.title }}
+                                </v-list-item-title>
                             </v-list-item>
                         </v-list>
                     </v-menu>
@@ -237,19 +243,19 @@ export default {
             financePanelSubmenuList:[
                 {
                     title: 'Finance Dashboard',
-                    anchor: ''
+                    toView: 'FinanceDashboard.view'
                 },
                 {
                     title: 'Top 10',
-                    anchor: ''
+                    toView: ''
                 },
                 {
                     title: 'Data Management',
-                    anchor: ''
+                    toView: ''
                 },
                 {
                     title: 'Validation',
-                    anchor: ''
+                    toView: ''
                 },
             ],
             databaseSubmenuList: [
