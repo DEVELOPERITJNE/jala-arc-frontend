@@ -1,12 +1,19 @@
 <template>
     <v-container fluid>
-        <h2>Finance dashboard</h2>
         <v-row>
             <v-col cols="12" md="12">
-                <div class="d-flex">
-
+                <div class="text-center d-flex ga-5 py-5">
+                    <v-select
+                        width="10"
+                        v-model="selectedYear"
+                        :items="availableYears"
+                        label="Select Year"
+                        variant="outlined"
+                        density="compact"
+                        style="max-width: 200px;"
+                    ></v-select>
+                    <v-btn variant="tonal" @click="applyFilter">Get</v-btn>
                 </div>
-                <v-btn variant="tonal">Get</v-btn>
             </v-col>
         </v-row>
         <v-row>
@@ -16,7 +23,7 @@
                         <span class="font-weight-black">Connote</span>
                     </v-card-title>
                     <v-card-text class="bg-surface-light pt-4 text-center">
-                        <h2>26,157,702</h2>
+                        <h2>{{ formatNumber(gtCnoteVal) }}</h2>
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -26,7 +33,7 @@
                         <span class="font-weight-black">Gross Omset</span>
                     </v-card-title>
                     <v-card-text class="bg-surface-light pt-4 text-center">
-                        <h2>Rp. 1,002,927,618,450</h2>
+                        <h2>{{ formatCurrency(gtOmsetVal) }}</h2>
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -36,7 +43,7 @@
                         <span class="font-weight-black">Commision</span>
                     </v-card-title>
                     <v-card-text class="bg-surface-light pt-4 text-center">
-                        <h2>Rp. 33,236,359,774</h2>
+                        <h2>{{ formatCurrency(gtCommVal) }}</h2>
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -49,7 +56,7 @@
                         <h2>Total Cnote</h2>
                     </v-card-title>
                     <v-card-text>
-                        <cnoteChart :chartData="totalCnoteData.monthlyConnote" :categories="totalCnoteData.months" :chartColors="['#806EE1']" />
+                        <cnoteChart :chartData="totalCnoteData.monthlyConnote || []" :categories="totalCnoteData.months || []" :chartColors="['#806EE1']" />
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -61,7 +68,7 @@
                         <h2>Total Gross Omset</h2>
                     </v-card-title>
                     <v-card-text>
-                        <grossOmsetChart :chartData="totalOmsetData.monthlyOmset" :categories="totalOmsetData.months" :chartColors="['#5A8EE9']" />
+                        <grossOmsetChart :chartData="totalOmsetData.monthlyOmset || []" :categories="totalOmsetData.months || []" :chartColors="['#5A8EE9']" />
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -73,7 +80,7 @@
                         <h2>Total Commision</h2>
                     </v-card-title>
                     <v-card-text>
-                        <commisionChart :chartData="totalCommision.monthlyCommision" :categories="totalCommision.months" :chartColors="['#F39AA5']" />
+                        <commisionChart :chartData="totalCommision.monthlyCommision || []" :categories="totalCommision.months || []" :chartColors="['#F39AA5']" />
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -107,6 +114,8 @@ import grossOmsetChart from '../components/grossOmsetChart.vue'
 import commisionChart from '../components/commisionChart.vue';
 
 import {useTheme} from 'vuetify'
+import { DASHBOARD_DATA } from '../stores/actions/reqApi'
+import { mapActions, mapGetters } from 'vuex';
 
 export default { 
     components: {
@@ -116,68 +125,49 @@ export default {
         DashboardDatatable
     },
     data() { 
-        return { 
+        return {
+            appliedYearFilter: null,
+            selectedYear: 2025,
+            dashboardData: {},
+            loading: false,
             theme: useTheme(),
-            totalCnoteData: {
-                months: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-                implants: [372717,319354,612080,703764,715873,729117,799285,595673,608830,550744,0,0],
-                utama: [2155698,1960576,2137182,2021293,2143381,1950684,2171237,1701798,1967273,1941143,0,0],
-                monthlyConnote: [
-                    2528415,
-                    2279930,
-                    2749262,
-                    2725057,
-                    2859254,
-                    2679801,
-                    2970522,
-                    2297471,
-                    2576103,
-                    2491887,
-                    0,
-                    0
-                ]
-            },
-            totalOmsetData: {
-                months: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-                implants: [20259322420, 18190107000, 30884157570, 31312234505, 33772588000, 39167684900, 33402424560, 23352305000, 26830286280, 27468347600,0,0],
-                utama: [66670961785,63640086785,75202351690,67818570135,76027470640,82385199300,80020173100,59747608120,70080897360,76694842700,0,0],
-                monthlyOmset: [
-                    86930284205,
-                    81830193785,
-                    106086509260,
-                    99130804640,
-                    109800058640,
-                    121552884200,
-                    113422597660,
-                    83099913120,
-                    96911183640,
-                    104163190300,
-                    0,
-                    0
-                ]
-            },
-            totalCommision: {
-                months: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-                implants: [ 816929131, 716665595, 998375762, 1069841043, 1068631315, 1214793995, 1098186573, 798002730, 960574764, 1025569882,0,0],
-                utama: [ 2199013860, 2110030029, 2345785639, 2175829646, 2390120217, 2539348507, 2611268104, 1996010418, 2416203805, 2685178759,0,0],
-                monthlyCommision: [
-                    3015942991,
-                    2826695624 ,
-                    3344161401,
-                    3245670689,
-                    3458751532,
-                    3754142502,
-                    3709454677,
-                    2794013148,
-                    3376778569,
-                    3710748641,
-                    0,
-                    0
-                ]
-            }
         }
     },
     methods: {
+        formatNumber(value) {
+            return new Intl.NumberFormat('id-ID').format(value)
+        },
+        formatCurrency(value) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(value)
+        },
+        ...mapActions({
+            actDASHBOARD_DATA: 'dashboard/'+DASHBOARD_DATA
+        }),
+        applyFilter(){ 
+            this.appliedYearFilter = this.selectedYear;
+        },
+        async dashboardGetlist() { 
+            this.loading = true;
+            try {
+                await this.actDASHBOARD_DATA();
+                this.dashboardData = this.getDASHBOARD_DATA.data;
+                const years = Object.keys(this.dashboardData)
+                if(years.length > 0) {
+                    const firstYear = years[0]
+                    this.selectedYear = firstYear
+                    this.appliedYearFilter = firstYear
+                }
+            } catch (err) {
+                console.error(err)
+            } finally { 
+                this.loading = false;
+            }
+        },
         hexToRgba(hex, o){
             const r = parseInt(hex.slice(1,3), 16)
             const g = parseInt(hex.slice(3,5), 16)
@@ -187,6 +177,9 @@ export default {
         }
     },
     computed: {
+        ...mapGetters({
+            getDASHBOARD_DATA: 'dashboard/'+DASHBOARD_DATA
+        }),
         gradientStyle() { 
             const colors = this.theme.current.colors
             return {
@@ -197,10 +190,40 @@ export default {
                     ${this.hexToRgba(colors.arcYellow, 0.75)}
                 )`
             }
+        },
+        availableYears() {
+            return Object.keys(this.dashboardData || {})
+        },
+        currentYearData() {
+            return this.dashboardData?.[this.appliedYearFilter] || {}
+        },
+        totalCnoteData() {
+            return this.currentYearData.totalCnoteData || {}
+        },
+        totalOmsetData() {
+            return this.currentYearData.totalOmsetData || {}
+        },
+        totalCommision() {
+            return this.currentYearData.totalCommision || {}
+        },
+        gtCnoteVal() {
+            const data = this.totalCnoteData?.monthlyConnote || []
+            return data.reduce((sum,val) => sum + val,0)
+        },
+        gtCommVal(){
+            const data = this.totalCommision?.monthlyCommision || []
+            return data.reduce((sum,val) => sum + val,0)
+        },
+        gtOmsetVal(){
+            const data = this.totalOmsetData?.monthlyOmset || []
+            return data.reduce((sum,val) => sum + val,0)
         }
     },
-    mounted(){
-        console.log('c ', this.gradientStyle)
+    async mounted(){
+        await this.dashboardGetlist();
+        // setTimeout(async() => {
+        //     await this.dashboardGetlist();
+        // }, 5000);
     }
 }
 </script>
