@@ -32,7 +32,8 @@ const vuetify = createVuetify({
                     ligthCustom: '#F2F9FF',
                     arcPurple: '#806EE1',
                     arcBlue: '#5A8EE9',
-                    arcPink: '#F39AA5'
+                    arcPink: '#F39AA5',
+                    arcYellow: '#F8D089'
                 }
             }
         }
