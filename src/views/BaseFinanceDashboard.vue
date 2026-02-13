@@ -4,13 +4,12 @@
             <v-col cols="12" md="12">
                 <div class="text-center d-flex ga-5 py-5">
                     <v-select
-                        width="10"
                         v-model="selectedYear"
                         :items="availableYears"
                         label="Select Year"
                         variant="outlined"
                         density="compact"
-                        style="max-width: 200px;"
+                        style="max-width: 400px;"
                     ></v-select>
                     <v-btn variant="tonal" @click="applyFilter">Get</v-btn>
                 </div>
@@ -18,31 +17,31 @@
         </v-row>
         <v-row>
             <v-col cols="12" md="4">
-                <v-card class="mx-auto" width="300">
+                <v-card width="400">
                     <v-card-title :style="gradientStyle">
                         <span class="font-weight-black">Connote</span>
                     </v-card-title>
-                    <v-card-text class="bg-surface-light pt-4 text-center">
+                    <v-card-text class="pt-4 text-center">
                         <h2>{{ formatNumber(gtCnoteVal) }}</h2>
                     </v-card-text>
                 </v-card>
             </v-col>
             <v-col cols="12" md="4">
-                <v-card class="mx-auto" width="300">
+                <v-card class="mx-auto" width="400">
                     <v-card-title :style="gradientStyle">
                         <span class="font-weight-black">Gross Omset</span>
                     </v-card-title>
-                    <v-card-text class="bg-surface-light pt-4 text-center">
+                    <v-card-text class="pt-4 text-center">
                         <h2>{{ formatCurrency(gtOmsetVal) }}</h2>
                     </v-card-text>
                 </v-card>
             </v-col>
             <v-col cols="12" md="4">
-                <v-card class="mx-auto" width="300">
+                <v-card class="ms-auto" width="400">
                     <v-card-title :style="gradientStyle">
                         <span class="font-weight-black">Commision</span>
                     </v-card-title>
-                    <v-card-text class="bg-surface-light pt-4 text-center">
+                    <v-card-text class="pt-4 text-center">
                         <h2>{{ formatCurrency(gtCommVal) }}</h2>
                     </v-card-text>
                 </v-card>
@@ -52,7 +51,7 @@
         <v-row>
             <v-col cols="12" md="12">
                 <v-card>
-                    <v-card-title>
+                    <v-card-title :style="gradientStyle2" class="gradient-box">
                         <h2>Total Cnote</h2>
                     </v-card-title>
                     <v-card-text>
@@ -64,7 +63,7 @@
         <v-row>
             <v-col cols="12" md="12">
                 <v-card>
-                    <v-card-title>
+                    <v-card-title class="gradient-box" :style="gradientStyle2">
                         <h2>Total Gross Omset</h2>
                     </v-card-title>
                     <v-card-text>
@@ -76,7 +75,7 @@
         <v-row>
             <v-col cols="12" md="12">
                 <v-card>
-                    <v-card-title>
+                    <v-card-title class="gradient-box" :style="gradientStyle2">
                         <h2>Total Commision</h2>
                     </v-card-title>
                     <v-card-text>
@@ -89,10 +88,10 @@
          <v-row>
             <v-col cols="12" md=12>
                 <v-card>
-                    <v-card-title>
+                    <v-card-title class="gradient-box my-2" :style="gradientStyle2">
                         <h2>Summary</h2>
                     </v-card-title>
-                    <v-card-text>
+                    <v-card-text class="pa-0">
                         <DashboardDatatable :totalCnoteData="totalCnoteData" :totalOmsetData="totalOmsetData" :totalCommision="totalCnoteData" density="compact"/>
                     </v-card-text>
                 </v-card>
@@ -102,7 +101,24 @@
     </v-container>
 </template>
 
-<style>
+<style scoped>
+
+.gradient-box {
+    position: relative;
+    overflow: hidden;
+}
+
+.gradient-box::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+
+    background-image: url('../assets/imgs/noise.jpg');
+    background-repeat: repeat;
+    opacity: 0.6;
+    mix-blend-mode: soft-light;
+}
 
 </style>
 
@@ -177,9 +193,42 @@ export default {
         }
     },
     computed: {
+        gradientStyle2() { 
+            const colors = this.theme.current.colors
+            return {
+                background: `linear-gradient(
+                    90deg,
+                    ${this.hexToRgba(colors.arcPurple, 0.2)},
+                    ${this.hexToRgba(colors.arcBlue, 0.2)},
+                    ${this.hexToRgba(colors.arcYellow, 0.2)}
+                )`
+            }
+        },
         ...mapGetters({
             getDASHBOARD_DATA: 'dashboard/'+DASHBOARD_DATA
         }),
+        gradientStyle2() { 
+            const colors = this.theme.current.colors
+            return {
+                background: `linear-gradient(
+                    90deg,
+                    ${this.hexToRgba(colors.arcPurple, 0.2)},
+                    ${this.hexToRgba(colors.arcBlue, 0.2)},
+                    ${this.hexToRgba(colors.arcYellow, 0.2)}
+                )`
+            }
+        },
+        gradientStyle2() { 
+            const colors = this.theme.current.colors
+            return {
+                background: `linear-gradient(
+                    90deg,
+                    ${this.hexToRgba(colors.arcPurple, 0.2)},
+                    ${this.hexToRgba(colors.arcBlue, 0.2)},
+                    ${this.hexToRgba(colors.arcYellow, 0.2)}
+                )`
+            }
+        },
         gradientStyle() { 
             const colors = this.theme.current.colors
             return {

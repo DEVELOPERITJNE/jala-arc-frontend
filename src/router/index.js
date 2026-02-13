@@ -4,6 +4,10 @@ import HomeView from '../views/BaseHomeView.vue';
 import BaseIndex from '../views/BaseIndex.vue';
 import BaseAgenPanel from '../views/BaseAgenPanel.vue';
 import BaseFinanceDashboard from '../views/BaseFinanceDashboard.vue';
+import BaseTopTenView from '../views/BaseTopTenView.vue'
+import BaseDataManagementView from '../views/BaseDataManagementView.vue';
+import BaseValidationView from '../views/BaseValidationView.vue';
+
 
 const routes = [
     {
@@ -36,6 +40,33 @@ const routes = [
                 meta: { 
                     title: 'Agen Panel',
                     breadcrumb: 'Agen Panel'
+                },
+            },
+            {
+                path: 'topten',
+                name: 'topten.view',
+                component: BaseTopTenView,
+                meta: { 
+                    title: 'Top 10',
+                    breadcrumb: 'Top 10'
+                },
+            },
+            {
+                path: 'datamanagement',
+                name: 'datamanagement.view',
+                component: BaseDataManagementView,
+                meta: { 
+                    title: 'Data Management',
+                    breadcrumb: 'Data Management'
+                },
+            },
+            {
+                path: 'validation',
+                name: 'validation.view',
+                component: BaseValidationView,
+                meta: { 
+                    title: 'Data Validation',
+                    breadcrumb: 'Data Validation'
                 },
             },
         ]

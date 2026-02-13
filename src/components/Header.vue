@@ -24,7 +24,7 @@
                 <div class="text-center nav-link">
                     <v-menu open-on-hover class="">
                         <template v-slot:activator="{props}">
-                            <v-btn v-bind="props" class="py-0" color="secondary text-none" :class="$route.name === 'FinanceDashboard.view' ? 'active-navbar-item' : ''">
+                            <v-btn v-bind="props" class="py-0" color="secondary text-none" :class="isSubmenuActive ? 'active-navbar-item' : ''">
                                 Finance Panel
                             </v-btn>
                         </template>
@@ -36,7 +36,7 @@
                                 :value="index"
                             >
                                 <v-list-item-title>
-                                    <router-link :to="{ name : item.toView}">
+                                    <router-link :to="{ name : item.toView}" class="text-secondary pa-0 d-block">
                                         {{ item.title }}
                                     </router-link>
                                 </v-list-item-title>
@@ -66,7 +66,7 @@
                 </router-link>
                 <div class="text-center nav-link">
                     <v-menu open-on-hover>
-                        <template v-slot:activator="{props}" class="nav-link">
+                        <template v-slot:activator="{props}" >
                             <v-btn v-bind="props" class="py-0" color="secondary text-none">
                                 Database
                             </v-btn>
@@ -247,15 +247,15 @@ export default {
                 },
                 {
                     title: 'Top 10',
-                    toView: ''
+                    toView: 'topten.view'
                 },
                 {
                     title: 'Data Management',
-                    toView: ''
+                    toView: 'datamanagement.view'
                 },
                 {
                     title: 'Validation',
-                    toView: ''
+                    toView: 'validation.view'
                 },
             ],
             databaseSubmenuList: [
@@ -271,6 +271,15 @@ export default {
         }
     },
     computed: { 
+        isSubmenuActive() { 
+            const activeRoutes = [
+                'FinanceDashboard.view',
+                'topten.view',
+                'datamanagement.view',
+                'validation.view'
+            ]
+            return activeRoutes.includes(this.$route.name);
+        },
         ...mapGetters({
             AUTH_USER:'auth/'+AUTH_USER,
         })
