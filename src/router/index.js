@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/BaseHomeView.vue';
 import BaseIndex from '../views/BaseIndex.vue';
 import BaseAgenPanel from '../views/BaseAgenPanel.vue';
+import BaseFinanceDashboard from '../views/BaseFinanceDashboard.vue';
 
 const routes = [
     {
@@ -17,6 +18,15 @@ const routes = [
                 meta: { 
                     title: 'Home',
                     breadcrumb: 'Home'
+                },
+            },
+            {
+                path: 'FinanceDashboard',
+                name: 'FinanceDashboard.view',
+                component: BaseFinanceDashboard,
+                meta: { 
+                    title: 'Finance Dashboard',
+                    breadcrumb: 'Finance Dashboard'
                 },
             },
             {

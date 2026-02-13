@@ -9,6 +9,7 @@ import VueCookies from 'vue-cookies';
 import global from './appcore/global.js';
 import globalTest from './appcore/globalTest.js';
 import AppAlert from './components/BaseAlert.vue';
+import VueApexCharts from 'vue3-apexcharts'
 import '@mdi/font/css/materialdesignicons.css'
 import '@fontsource/dm-sans';
 import '@fontsource/dm-sans/400.css';
@@ -18,6 +19,8 @@ import { AUTH_TOKEN, AUTH_USER, AUTH_GET_USER } from './stores/actions/reqApi.js
 const app = createApp(App);
 app.use(VueCookies);
 app.use(global);
+app.use(VueApexCharts)
+app.component('apexchart', VueApexCharts)
 app.mixin(globalTest);
 app.component('AppAlert', AppAlert );
 
