@@ -1,0 +1,232 @@
+[
+    {
+        "id_agen": "11140500",
+        "nama_agen": "DADAP RESIDENCE",
+        "total_cnote": 105805,
+        "total_gross_omset": 5385186300,
+        "total_commission": 215015246,
+        "cashless_type" : "agen"
+    },
+    {
+        "id_agen": "11098300",
+        "nama_agen": "AGEN TELAGA BIRU",
+        "total_cnote": 64089,
+        "total_gross_omset": 3629879500,
+        "total_commission": 162449505,
+        "cashless_type" : "agen"
+    },
+    {
+        "id_agen": "10876600",
+        "nama_agen": "CISQI",
+        "total_cnote": 46405,
+        "total_gross_omset": 2143335500,
+        "total_commission": 77776425,
+        "cashless_type" : "agen"
+    },
+    {
+        "id_agen": "11123500",
+        "nama_agen": "GREEN VILLAGE",
+        "total_cnote": 63182,
+        "total_gross_omset": 2024319500,
+        "total_commission": 72877775,
+        "cashless_type" : "agen"
+    },
+    {
+        "id_agen": "11090100",
+        "nama_agen": "AGEN KRAMAT",
+        "total_cnote": 58161,
+        "total_gross_omset": 2485057000,
+        "total_commission": 65946315,
+        "cashless_type" : "agen"
+    },
+    {
+        "id_agen": "11183500",
+        "nama_agen": "AGEN DUTA BANDARA PERMAI",
+        "total_cnote": 35631,
+        "total_gross_omset": 1775137000,
+        "total_commission": 65243415,
+        "cashless_type" : "agen"
+    },
+    {
+        "id_agen": "11092000",
+        "nama_agen": "AGEN NUSA HARUM",
+        "total_cnote": 27199,
+        "total_gross_omset": 1487684000,
+        "total_commission": 60280310,
+        "cashless_type" : "agen"
+    },
+    {
+        "id_agen": "10667500",
+        "nama_agen": "AGEN GLC GEMILANG",
+        "total_cnote": 35620,
+        "total_gross_omset": 1592031000,
+        "total_commission": 60234995,
+        "cashless_type" : "agen"
+    },
+    {
+        "id_agen": "10605900",
+        "nama_agen": "AGEN GRAND TOMANG",
+        "total_cnote": 19913,
+        "total_gross_omset": 1296210500,
+        "total_commission": 53807655,
+        "cashless_type" : "agen"
+    },
+    {
+        "id_agen": "10665200",
+        "nama_agen": "AGEN GALAXY",
+        "total_cnote": 19475,
+        "total_gross_omset": 1137507000,
+        "total_commission": 45870070,
+        "cashless_type" : "agen"
+    },
+    {
+        "id_agen": "11166500",
+        "nama_agen": "RABBANI 3",
+        "total_cnote": 18725,
+        "total_gross_omset": 1994032500,
+        "total_commission": 98074555,
+        "cashless_type" : "implant"
+    },
+    {
+        "id_agen": "11153700",
+        "nama_agen": "RABBANI 2",
+        "total_cnote": 32952,
+        "total_gross_omset": 1872581500,
+        "total_commission": 91777265,
+        "cashless_type" : "implant"
+    },
+    {
+        "id_agen": "12042000",
+        "nama_agen": "BEVERLI 3",
+        "total_cnote": 15617,
+        "total_gross_omset": 1754266000,
+        "total_commission": 79310270,
+        "cashless_type" : "implant"
+    },
+    {
+        "id_agen": "11154200",
+        "nama_agen": "BERKAH RAFA RAFI 2",
+        "total_cnote": 9428,
+        "total_gross_omset": 1303259500,
+        "total_commission": 64385780,
+        "cashless_type" : "implant"
+    },
+    {
+        "id_agen": "12056700",
+        "nama_agen": "AVILYA 1",
+        "total_cnote": 19611,
+        "total_gross_omset": 1337048500,
+        "total_commission": 56863115,
+        "cashless_type" : "implant"
+    },
+    {
+        "id_agen": "12050800",
+        "nama_agen": "GLC GEMILANG 11",
+        "total_cnote": 28084,
+        "total_gross_omset": 1271132000,
+        "total_commission": 46231670,
+        "cashless_type" : "implant"
+    },
+    {
+        "id_agen": "11152400",
+        "nama_agen": "RABBANI 1",
+        "total_cnote": 8402,
+        "total_gross_omset": 962515500,
+        "total_commission": 41530130,
+        "cashless_type" : "implant"
+    },
+    {
+        "id_agen": "12054300",
+        "nama_agen": "KRAMAT 1",
+        "total_cnote": 36075,
+        "total_gross_omset": 1254472100,
+        "total_commission": 39938482,
+        "cashless_type" : "implant"
+    },
+    {
+        "id_agen": "11137700",
+        "nama_agen": "KALIBARU 1",
+        "total_cnote": 9088,
+        "total_gross_omset": 809794000,
+        "total_commission": 35231745,
+        "cashless_type" : "implant"
+    },
+    {
+        "id_agen": "12056900",
+        "nama_agen": "NUSA HARUM 2",
+        "total_cnote": 3614,
+        "total_gross_omset": 673301000,
+        "total_commission": 31587255,
+        "cashless_type" : "implant"
+    },
+    {
+        "id_agen": "SHOPEE INTERNATIONAL INDONESIA PT",
+        "total_cnote": 1799924,
+        "total_gross_omset": 82311195800,
+        "total_commission": 3037129426,
+        "cashless_type" : "mp"
+    },
+    {
+        "id_agen": "TOKOPEDIA PT",
+        "total_cnote": 344733,
+        "total_gross_omset": 12695741000,
+        "total_commission": 496230000,
+        "cashless_type" : "mp"
+    },
+    {
+        "id_agen": "TOKGISTIC PTE",
+        "total_cnote": 237158,
+        "total_gross_omset": 7268249000,
+        "total_commission": 109974000,
+        "cashless_type" : "mp"
+    },
+    {
+        "id_agen": "SEMANGAT LOGISTIC ANDALAN",
+        "total_cnote": 67370,
+        "total_gross_omset": 806702000,
+        "total_commission": 23410940,
+        "cashless_type" : "mp"
+    },
+    {
+        "id_agen": "TOKGISTIC PTE. LTD",
+        "total_cnote": 16024,
+        "total_gross_omset": 486052000,
+        "total_commission": 7790920,
+        "cashless_type" : "mp"
+    },
+    {
+        "id_agen": "LASTANA EXPRESS IND PT",
+        "total_cnote": 15220,
+        "total_gross_omset": 311614000,
+        "total_commission": 18709370,
+        "cashless_type" : "mp"
+    },
+    {
+        "id_agen": "ORDIVO TEKNOLOGI INDONESIA PT",
+        "total_cnote": 3003,
+        "total_gross_omset": 84896000,
+        "total_commission": 1504700,
+        "cashless_type" : "mp"
+    },
+    {
+        "id_agen": "GLOBAL DIGITAL NIAGA TBK PT",
+        "total_cnote": 3391,
+        "total_gross_omset": 78293500,
+        "total_commission": 4359065,
+        "cashless_type" : "mp"
+    },
+    {
+        "id_agen": "SELALU SIAP SOLUSI PT",
+        "total_cnote": 1632,
+        "total_gross_omset": 39234500,
+        "total_commission": 3754275,
+        "cashless_type" : "mp"
+    },
+    {
+        "id_agen": "SETIAP HARI DIPAKAI PT / EVERPRO",
+        "total_cnote": 1145,
+        "total_gross_omset": 28748000,
+        "total_commission": 2855550,
+        "cashless_type" : "mp"
+    }
+]
