@@ -2,35 +2,35 @@ export const dashboardTableHeaders = [
     { 
         title: 'Month', 
         key: 'month',
-        headerProps:{class: 'header-purple'},
+        headerProps:{class: 'header-purple font-weight-bold'},
     },
     {
         title: 'Cnote',
         align: 'center',
-        headerProps:{class: 'header-purple'},
+        headerProps:{class: 'header-purple font-weight-bold'},
         children: [
-            { title: 'Implants', key: 'cnote_implants', headerProps:{class: 'header-purple'}, },
-            { title: 'Utama', key: 'cnote_utama',headerProps:{class: 'header-purple'}, }
+            { title: 'Implants', key: 'cnote_implants', headerProps:{class: 'header-purple font-weight-bold'}, },
+            { title: 'Utama', key: 'cnote_utama',headerProps:{class: 'header-purple font-weight-bold'}, }
         ]
     },
 
     {
         title: 'Gross Omset',
         align: 'center',
-        headerProps:{class: 'header-purple'},
+        headerProps:{class: 'header-purple font-weight-bold'},
         children: [
-            { title: 'Implants', key: 'omset_implants', headerProps:{class: 'header-purple'}, },
-            { title: 'Utama', key: 'omset_utama', headerProps:{class: 'header-purple'}, }
+            { title: 'Implants', key: 'omset_implants', headerProps:{class: 'header-purple font-weight-bold'}, },
+            { title: 'Utama', key: 'omset_utama', headerProps:{class: 'header-purple font-weight-bold'}, }
         ]
     },
 
     {
         title: 'Commission',
         align: 'center',
-        headerProps:{class: 'header-purple'},
+        headerProps:{class: 'header-purple font-weight-bold'},
         children: [
-            { title: 'Implants', key: 'commission_implants', headerProps:{class: 'header-purple'}, },
-            { title: 'Utama', key: 'commission_utama', headerProps:{class: 'header-purple'}, }
+            { title: 'Implants', key: 'commission_implants', headerProps:{class: 'header-purple font-weight-bold'}, },
+            { title: 'Utama', key: 'commission_utama', headerProps:{class: 'header-purple font-weight-bold'}, }
         ]
     }
 ]
@@ -68,49 +68,51 @@ const getDefaultAlign = (type) => {
 }
 
 export const columnTypes = {
-    text: {
-        format: (val) => val ?? '-'
+    default: {
+        format: (value) => value ?? '-'
     },
 
     number: {
-        format: (val) =>
-        new Intl.NumberFormat('id-ID').format(val ?? 0)
+        format: (value) => {
+        if (value == null) return '-'
+        return new Intl.NumberFormat('id-ID').format(Number(value))
+        }
     },
 
     currency: {
-        format: (val) =>
-        new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR'
-        }).format(val ?? 0)
-    },
-
-    percent: {
-        format: (val) => `${val ?? 0}%`
+        format: (value) => {
+            if (value == null) return '-'
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(Number(value))
+        }
     }
 }
+
+
 
 export const buildHeaders = (columns) => {
     return columns
         .filter(col => !col.hidden)
         .map(col => {
-        // kalo pake children
         if (col.children && col.children.length) {
             return {
-            title: col.title,
-            align: col.align,
-            children: buildHeaders(col.children)
+                title: col.title,
+                align: col.align,
+                children: buildHeaders(col.children),
+                headerProps:{class: 'header-purple font-weight-bold'},
             }
         }
 
-        // leaf column
         return {
             title: col.title,
             key: col.key,
             sortable: col.sortable,
             align: col.align,
-            width: col.width
+            width: col.width,
+            headerProps:{class: 'header-purple font-weight-bold'},
         }
     })
 }
-
