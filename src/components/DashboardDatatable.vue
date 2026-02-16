@@ -47,7 +47,7 @@ export default {
     },
     methods: {
         formatCurrency(value) {
-        return new Intl.NumberFormat('id-ID').format(value)
+            return new Intl.NumberFormat('id-ID').format(value)
         }
     }
 }

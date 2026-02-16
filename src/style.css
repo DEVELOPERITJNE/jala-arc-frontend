@@ -136,3 +136,20 @@ button:focus-visible {
 .no-resize textarea { 
     resize: none;
 }
+
+.gradient-box {
+    position: relative;
+    overflow: hidden;
+}
+
+.gradient-box::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+
+    background-image: url('../assets/imgs/noise.jpg');
+    background-repeat: repeat;
+    opacity: 0.6;
+    mix-blend-mode: soft-light;
+}

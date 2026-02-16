@@ -2,12 +2,12 @@ import {useTheme} from 'vuetify'
 export default { 
     data() { 
         return { 
-            theme: useTheme(),
+            tete: useTheme(),
         }
     },
     computed: {
         gradientStyle2() { 
-            const colors = this.theme.current.colors
+            const colors = this.tete.current.colors
             return {
                 background: `linear-gradient(
                     90deg,
@@ -18,7 +18,7 @@ export default {
             }
         },
         gradientStyle() { 
-            const colors = this.theme.current.colors
+            const colors = this.tete.current.colors
             return {
                 background: `linear-gradient(
                     90deg,

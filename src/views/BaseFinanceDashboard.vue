@@ -103,23 +103,6 @@
 
 <style scoped>
 
-.gradient-box {
-    position: relative;
-    overflow: hidden;
-}
-
-.gradient-box::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-
-    background-image: url('../assets/imgs/noise.jpg');
-    background-repeat: repeat;
-    opacity: 0.6;
-    mix-blend-mode: soft-light;
-}
-
 </style>
 
 <script>
@@ -217,9 +200,6 @@ export default {
     },
     async mounted(){
         await this.dashboardGetlist();
-        // setTimeout(async() => {
-        //     await this.dashboardGetlist();
-        // }, 5000);
     }
 }
 </script>
