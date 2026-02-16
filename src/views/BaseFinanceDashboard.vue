@@ -129,7 +129,6 @@ import cnoteChart from '../components/connoteChart.vue';
 import grossOmsetChart from '../components/grossOmsetChart.vue'
 import commisionChart from '../components/commisionChart.vue';
 
-import {useTheme} from 'vuetify'
 import { DASHBOARD_DATA } from '../stores/actions/reqApi'
 import { mapActions, mapGetters } from 'vuex';
 
@@ -146,7 +145,6 @@ export default {
             selectedYear: 2025,
             dashboardData: {},
             loading: false,
-            theme: useTheme(),
         }
     },
     methods: {
@@ -184,62 +182,11 @@ export default {
                 this.loading = false;
             }
         },
-        hexToRgba(hex, o){
-            const r = parseInt(hex.slice(1,3), 16)
-            const g = parseInt(hex.slice(3,5), 16)
-            const b = parseInt(hex.slice(5,7), 16)
-
-            return `rgba(${r}, ${g}, ${b}, ${o})`
-        }
     },
     computed: {
-        gradientStyle2() { 
-            const colors = this.theme.current.colors
-            return {
-                background: `linear-gradient(
-                    90deg,
-                    ${this.hexToRgba(colors.arcPurple, 0.2)},
-                    ${this.hexToRgba(colors.arcBlue, 0.2)},
-                    ${this.hexToRgba(colors.arcYellow, 0.2)}
-                )`
-            }
-        },
         ...mapGetters({
             getDASHBOARD_DATA: 'dashboard/'+DASHBOARD_DATA
         }),
-        gradientStyle2() { 
-            const colors = this.theme.current.colors
-            return {
-                background: `linear-gradient(
-                    90deg,
-                    ${this.hexToRgba(colors.arcPurple, 0.2)},
-                    ${this.hexToRgba(colors.arcBlue, 0.2)},
-                    ${this.hexToRgba(colors.arcYellow, 0.2)}
-                )`
-            }
-        },
-        gradientStyle2() { 
-            const colors = this.theme.current.colors
-            return {
-                background: `linear-gradient(
-                    90deg,
-                    ${this.hexToRgba(colors.arcPurple, 0.2)},
-                    ${this.hexToRgba(colors.arcBlue, 0.2)},
-                    ${this.hexToRgba(colors.arcYellow, 0.2)}
-                )`
-            }
-        },
-        gradientStyle() { 
-            const colors = this.theme.current.colors
-            return {
-                background: `linear-gradient(
-                    90deg,
-                    ${this.hexToRgba(colors.arcPurple, 0.75)},
-                    ${this.hexToRgba(colors.arcBlue, 0.75)},
-                    ${this.hexToRgba(colors.arcYellow, 0.75)}
-                )`
-            }
-        },
         availableYears() {
             return Object.keys(this.dashboardData || {})
         },
