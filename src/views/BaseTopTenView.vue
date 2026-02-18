@@ -1,56 +1,24 @@
 <template>
     <v-container fluid>
         <v-row class="align-center">
-            <!-- dua datepicker -->
-            <!-- <v-col cols="12" md="3">
-                <div class="text-center d-flex ga-5 py-5">
-                    <v-menu v-model="menu.start" :close-on-content-click="false">
-                        <template #activator="{props}">
-                            <v-text-field v-bind="props" v-model="formattedDateS" label="Start Date" readonly />
-                        </template>
-
-                        <v-date-picker v-model="dateVal.start" @update:model-value="menu.start = false" />
-                    </v-menu>
-                </div>
-            </v-col>
-            <v-col cols="12" md="3">
-                <div class="text-center d-flex ga-5 py-5">
-                    <v-menu v-model="menu.end" :close-on-content-click="false">
-                        <template #activator="{props}">
-                            <v-text-field v-bind="props" v-model="formattedDateE" label="End Date" readonly />
-                        </template>
-
-                        <v-date-picker v-model="dateVal.end" @update:model-value="menu.end = false" />
-                    </v-menu>
-                </div>
-            </v-col> -->
-
-            <!-- 1 datepicker range -->
             <v-col cols="12" md="6">
                 <div class="text-center d-flex ga-4 flex-wrap">
-                    <v-menu v-model="datepickers" :close-on-content-click="false">
-                        <template #activator="{props}">
-                            <v-text-field variant="outlined" v-bind="props" v-model="formattedDates" label="Select Dates" readonly density="compact" max-width="300" />
-                        </template>
-                        <v-date-picker v-model="tempDates" multiple="range" elevation="24">>
-                            <template #actions>
-                                <v-btn variant="text" @click="onCancel" :disabled="!tempDates?.length">Clear</v-btn>
-                                <v-btn variant="flat" color="primary" @click="onApply">
-                                    Apply
-                                </v-btn>
-                            </template>
-                        </v-date-picker>
-                    </v-menu>
-                    <v-btn variant="tonal">Get</v-btn>
-                    <v-btn variant="flat" color="success">Download</v-btn>
+                    <BaseDateRangePicker v-model="datepickers" />
+                    <v-btn variant="tonal" @click="getBtn">Get</v-btn>
+                    <v-btn variant="flat" color="success">
+                        <v-icon class="px-5">mdi mdi-tray-arrow-down</v-icon>
+                        Download
+                    </v-btn>
                 </div>
             </v-col>
         </v-row>
         <v-row>
             <v-col cols="12" md="4">
                 <v-card width="400">
-                    <v-card-title :style="gradientStyle">
+                    <v-card-title :style="gradientStyle" class="d-flex">
+                        <v-icon class="px-5" color="warning">mdi mdi-crown</v-icon>
                         <span class="font-weight-black">Top Agent</span>
+                        <v-icon class="ms-auto">mdi mdi-home-analytics</v-icon>
                     </v-card-title>
                     <v-card-text class="pt-4 text-center">
                         <h2>{{ topAgen('agen')?.nama_agen }}</h2>
@@ -59,8 +27,10 @@
             </v-col>
             <v-col cols="12" md="4">
                 <v-card class="mx-auto" width="400">
-                    <v-card-title :style="gradientStyle">
+                    <v-card-title :style="gradientStyle" class="d-flex">
+                        <v-icon class="px-5" color="warning">mdi mdi-crown</v-icon>
                         <span class="font-weight-black">Top Implant</span>
+                        <v-icon class="ms-auto">mdi mdi-home-analytics</v-icon>
                     </v-card-title>
                     <v-card-text class="pt-4 text-center">
                         <h2>{{ topAgen('implant')?.nama_agen }}</h2>
@@ -69,8 +39,10 @@
             </v-col>
             <v-col cols="12" md="4">
                 <v-card class="ms-auto" width="400">
-                    <v-card-title :style="gradientStyle">
+                    <v-card-title :style="gradientStyle" class="d-flex">
+                        <v-icon class="px-5" color="warning">mdi mdi-crown</v-icon>
                         <span class="font-weight-black">Top Marketplace</span>
+                        <v-icon class="ms-auto">mdi mdi-home-analytics</v-icon>
                     </v-card-title>
                     <v-card-text class="pt-4 text-center">
                         <h4>{{ topAgen('mp')?.id_agen }}</h4>
@@ -138,6 +110,7 @@
 import { createColumn, buildHeaders, columnTypes } from '../tables/table.config';
 import { TOP_TEN } from '../stores/actions/reqApi'
 import { mapActions, mapGetters } from 'vuex';
+import BaseDateRangePicker from '../components/BaseDateRangePicker.vue';
 
 const cols = [
     createColumn({key: 'id_agen', title: 'ID Agen'}),
@@ -155,11 +128,13 @@ const formatCellBacod = (value, type) => {
 
 export default { 
     name:'BaseTopTenView',
+    components: {
+        BaseDateRangePicker
+    },
     data() { 
         return { 
             dtLoading: false,
-            datepickers: false,
-            tempDates: [],
+            datepickers: [],
             dates: [],
             menu: {
                 start: false,
@@ -184,23 +159,11 @@ export default {
         ...mapGetters({
             getTOP_TEN: 'datatop/'+TOP_TEN
         }),
-        formattedDates(){
-            if (!this.dates || this.dates.length < 2) return ;
-            const [start,end] = this.dates
-            return (
-                new Date(start).toLocaleDateString('id-ID')+'-'+new Date(end).toLocaleDateString('id-ID')
-            )
-        },
-        formattedDateS() { 
-            if(!this.dateVal.start) return '';
-            return new Date(this.dateVal.start).toLocaleDateString('id-ID')
-        },
-        formattedDateE() { 
-            if(!this.dateVal.end) return '';
-            return new Date(this.dateVal.end).toLocaleDateString('id-ID')
-        }
     },
     methods: {
+        getBtn(){
+            console.log('date payload', this.datepickers);
+        },
         dtGetlist(type){
             return (this.getTOP_TEN?.data ?? []).filter(i => i.cashless_type === type)
         },
@@ -213,27 +176,11 @@ export default {
         ...mapActions({
             actTOP_TEN: 'datatop/'+TOP_TEN
         }),
-        onApply() {
-            if (!this.tempDates?.length) return
-            if (this.tempDates.length === 1) {
-                this.dates = [this.tempDates[0], this.tempDates[0]]
-            } else {
-                this.dates = this.tempDates
-            }
-
-            this.datepickers = false
-        },
-        onCancel() {
-            this.tempDates = []
-            this.dates = []
-        }
     },
     async mounted() {
         try {
             this.dtLoading = true;
             await this.actTOP_TEN()
-            console.log('data nya ', this.getTOP_TEN?.data)
-            console.log('buatan gua coba ', this.dtGetlist('mp'))
         } catch (error) {
             console.log('error ', error)
         } finally { 
@@ -241,7 +188,9 @@ export default {
         }
     },
     watch: {
-
+        datepickers(val){
+            console.log('dates ', val)
+        }
     }
 }
 </script>
