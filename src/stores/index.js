@@ -4,6 +4,7 @@ import auth from './auth'
 import user from './user';
 import dashboard from './dashboard'
 import datatop from './datatop'
+import financepanel from './financepanel'
 
 
 const store = createStore({
@@ -12,6 +13,7 @@ const store = createStore({
         user: user,
         dashboard: dashboard,
         datatop: datatop,
+        financepanel: financepanel,
     },
     state: {
         GALLERY_ITEMS: [],
