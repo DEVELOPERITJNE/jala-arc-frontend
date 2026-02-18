@@ -9,7 +9,8 @@ import VueCookies from 'vue-cookies';
 import global from './appcore/global.js';
 import globalTest from './appcore/globalTest.js';
 import AppAlert from './components/BaseAlert.vue';
-import VueApexCharts from 'vue3-apexcharts'
+import VueApexCharts from 'vue3-apexcharts';
+import moment from 'moment';
 import '@mdi/font/css/materialdesignicons.css'
 import '@fontsource/dm-sans';
 import '@fontsource/dm-sans/400.css';
@@ -23,6 +24,7 @@ app.use(VueApexCharts)
 app.component('apexchart', VueApexCharts)
 app.mixin(globalTest);
 app.component('AppAlert', AppAlert );
+app.config.globalProperties.$moment = moment
 
 // window.addEventListener("DOMContentLoaded", async () => {
 //     try {
