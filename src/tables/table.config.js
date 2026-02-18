@@ -105,14 +105,15 @@ export const buildHeaders = (columns) => {
                 headerProps:{class: 'header-purple font-weight-bold'},
             }
         }
-
+        const isAction = col.key === 'action'
         return {
             title: col.title,
             key: col.key,
             sortable: col.sortable,
             align: col.align,
             width: col.width,
-            headerProps:{class: 'header-purple font-weight-bold'},
+            headerProps:{class: `header-purple font-weight-bold ${isAction ? 'sticky-header' : ''}`},
+            cellProps: isAction ? {class : 'sticky-cell'} : {}
         }
     })
 }
