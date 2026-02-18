@@ -4,9 +4,13 @@ import 'vuetify/styles'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
+import { VFileUpload } from 'vuetify/labs/VFileUpload'
 
 const vuetify = createVuetify({ 
-    components, 
+    components: {
+        ...components,
+        VFileUpload,
+    },
     directives,
     icons: {
         defaultSet: 'mdi',
@@ -25,7 +29,7 @@ const vuetify = createVuetify({
                     primary: '#1976D2',
                     secondary: '#424242',
                     accent: '#82B1FF',
-                    error: '#FF5252',
+                    danger: '#FF5252',
                     info: '#2196F3',
                     success: '#4CAF50',
                     warning: '#FFC107',
