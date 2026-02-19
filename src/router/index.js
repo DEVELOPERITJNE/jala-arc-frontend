@@ -7,6 +7,7 @@ import BaseFinanceDashboard from '../views/BaseFinanceDashboard.vue';
 import BaseTopTenView from '../views/BaseTopTenView.vue'
 import BaseDataManagementView from '../views/BaseDataManagementView.vue';
 import BaseValidationView from '../views/BaseValidationView.vue';
+import BaseReportView from '../views/BaseReportView.vue';
 
 
 const routes = [
@@ -34,12 +35,21 @@ const routes = [
                 },
             },
             {
+                path: 'report',
+                name: 'report.view',
+                component: BaseReportView,
+                meta: { 
+                    title: 'Report',
+                    breadcrumb: 'Report'
+                },
+            },
+            {
                 path: 'agenpanel',
                 name: 'agenpanel.view',
                 component: BaseAgenPanel,
                 meta: { 
                     title: 'Agen Panel',
-                    breadcrumb: 'Agen Panel'
+                    breadcrumb: 'Agen Dashboard'
                 },
             },
             {

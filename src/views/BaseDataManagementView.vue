@@ -12,7 +12,7 @@
                         <v-col cols="12" md="6">
                             <div class="text-center d-flex ga-4 flex-wrap">
                                 <BaseDateRangePicker v-model="dpCashless" />
-                                <v-btn variant="tonal">Get</v-btn>
+                                <v-btn variant="flat" color="warning">Get</v-btn>
                                 <v-btn variant="flat" color="success" @click="cashlessDialog = true">
                                     <v-icon class="px-5">mdi mdi-tray-arrow-up</v-icon>
                                     Upload
@@ -59,10 +59,12 @@
                         <v-col cols="12" md="6">
                             <div class="text-center d-flex ga-4 flex-wrap">
                                 <BaseDateRangePicker v-model="dpClaim" />
-                                <v-btn variant="tonal">Get</v-btn>
+                                <v-btn variant="flat" color="warning">Get</v-btn>
                                 <v-btn variant="flat" color="success" @click="uplDialogClaim = true">
-                                    <v-icon class="px-5">mdi mdi-tray-arrow-up</v-icon>
-                                    Upload
+                                    <v-icon class="px-5">mdi mdi-tray-arrow-up</v-icon><label>Upload</label>
+                                </v-btn>
+                                <v-btn variant="flat" color="success">
+                                    <v-icon class="px-5">mdi mdi-tray-arrow-down</v-icon><label>Download</label>
                                 </v-btn>
                             </div>
                         </v-col>
@@ -84,7 +86,7 @@
                                     </v-text-field>
                                 </v-card-title>
                                 <v-card-text class="px-0">
-                                    <v-data-table density="compact" :items="filteredItems" :headers="headersDT" item-key="id">
+                                    <v-data-table density="compact" :items="filteredClaimDT" :headers="claimHeaderDT" item-key="id">
                                         <template v-for="col in dataManagementDT" :key="col.key" #[`item.${col.key}`]="{ item, value, index }">
                                             <span v-if="col.type === 'index'">{{ index + 1 }}</span>
                                             <span v-else-if="col.key !== 'action'">
@@ -190,8 +192,16 @@
 
 import { createColumn, buildHeaders, columnTypes } from '../tables/table.config';
 import { mapActions, mapGetters } from 'vuex';
-import { DT_MANAGEMENT } from '../stores/actions/reqApi'
+import { DT_MANAGEMENT,DT_CLAIM } from '../stores/actions/reqApi'
 import BaseDateRangePicker from '../components/BaseDateRangePicker.vue'
+
+const dataClaimCols = [
+    createColumn({key: 'index', title: 'No', type: 'index'}),
+    createColumn({key: 'agen_id', title: 'Agen ID'}),
+    createColumn({key: 'agen_name', title: 'Agen Name'}),
+    createColumn({key: 'nominal_pca', title: 'Nominal PCA', type:'currency'}),
+    createColumn({key: 'action', title: 'Action'})
+]
 
 const dataManagementCols = [
     createColumn({key: 'index', title: 'No', type: 'index'}),
@@ -235,7 +245,8 @@ export default {
     },
     computed: {
         ...mapGetters({
-            getDT_MANAGEMENT: 'financepanel/'+DT_MANAGEMENT
+            getDT_MANAGEMENT: 'financepanel/'+DT_MANAGEMENT,
+            getDT_CLAIM: 'financepanel/'+DT_CLAIM,
         }),
         formatCell() { 
             return formatCellBacod
@@ -256,7 +267,25 @@ export default {
                     return value?.toString().toLowerCase().includes(keyword)
                 })
             )
-        }
+        },
+        // claim
+        claimDT(){
+            return dataClaimCols
+        },
+        claimHeaderDT(){
+            return buildHeaders(this.claimDT)
+        },
+        filteredClaimDT() {
+            const items = this.claim_dt_getlist()
+            if (!this.dtSearch) return items
+            const keyword = this.dtSearch.toLowerCase()
+            return items.filter(row =>
+                this.dataManagementDT.some(col => {
+                    const value = row[col.key]
+                    return value?.toString().toLowerCase().includes(keyword)
+                })
+            )
+        },
     },
     methods: {
         handleDialogBtn(val){
@@ -276,10 +305,14 @@ export default {
             this.dtEditDialog = true
         },
         ...mapActions({
-            actDT_MANAGEMENT: 'financepanel/'+DT_MANAGEMENT
+            actDT_MANAGEMENT: 'financepanel/'+DT_MANAGEMENT,
+            actDT_CLAIM: 'financepanel/'+DT_CLAIM,
         }),
         management_dt_getlist() {
             return this.getDT_MANAGEMENT?.data ?? []
+        },
+        claim_dt_getlist() {
+            return this.getDT_CLAIM?.data ?? []
         }
     },
     async mounted(){
@@ -308,9 +341,9 @@ export default {
             }
         },
         async datamanagementtab(val) {
-            if(val === 'cashless') {
+            if(val !== 'cashless') {
                 try {
-                    await this.actDT_MANAGEMENT()
+                    await this.actDT_CLAIM()
                 } catch (error) {
                     console.error("Error", error)
                 }

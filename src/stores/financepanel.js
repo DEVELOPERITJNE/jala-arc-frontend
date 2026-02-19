@@ -1,12 +1,14 @@
 import {$axInstance} from '../stores/api.js';
-import { DT_MANAGEMENT, VALIDATION_RECON_GETLIST } from './actions/reqApi';
+import { DT_CLAIM, DT_MANAGEMENT, VALIDATION_RECON_GETLIST } from './actions/reqApi';
 
 const state = {
     DT_MANAGEMENT:{},
+    DT_CLAIM:{},
     VALIDATION_RECON_GETLIST:{},
 }
 
 const getters = { 
+    [DT_CLAIM] : state => state.DT_CLAIM,
     [DT_MANAGEMENT] : state => state.DT_MANAGEMENT,
     [VALIDATION_RECON_GETLIST] : state => state.VALIDATION_RECON_GETLIST,
 }
@@ -19,6 +21,17 @@ const actions = {
                 resolve(resp);
             }).catch(err => {
                 commit(DT_MANAGEMENT,{});
+                reject(err.response);
+            });
+        });
+    },
+    [DT_CLAIM]:async ({commit})=>{
+        return new Promise((resolve,reject)=>{
+            $axInstance.get('app/data/datamanagementClaim.json').then(resp => {
+                commit(DT_CLAIM,resp);
+                resolve(resp);
+            }).catch(err => {
+                commit(DT_CLAIM,{});
                 reject(err.response);
             });
         });
@@ -37,6 +50,9 @@ const actions = {
 }
 
 const mutations = { 
+    [DT_CLAIM](state, resp) {
+        state.DT_CLAIM = resp;
+    },
     [DT_MANAGEMENT](state, resp) {
         state.DT_MANAGEMENT = resp;
     },

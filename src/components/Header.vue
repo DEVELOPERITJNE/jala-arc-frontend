@@ -54,11 +54,11 @@
                         Agent Panel
                     </v-btn>
                 </router-link>
-                <router-link :to="{ name: 'agenpanel.view' }" class="nav-link">
+                <router-link :to="{ name: 'report.view' }" class="nav-link">
                     <v-btn 
                         text
                         class="py-0"
-                        :class="$route.name === 'agenpanel.view' ? 'active-navbar-item' : ''"
+                        :class="$route.name === 'report.view' ? 'active-navbar-item' : ''"
                         color="secondary text-none"
                     >
                         Report
