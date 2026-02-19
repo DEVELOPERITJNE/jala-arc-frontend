@@ -1,82 +1,62 @@
 [
     {
         "id": 1,
-        "user": "NUR ANGGRAENI",
-        "date_upload": "03-Feb-2025",
-        "periode": "03 - 12 Dec-2025",
-        "core_file": "CASHLESS COMMISION 01 - 03 DESEMBER 2025.xlsx",
-        "apex_file": "APEX COMMISION 01 - 03 DESEMBER 2025.xlsx"
+        "agen_id": "11153500",
+        "agen_name": "GEMILANG",
+        "nominal_pca": 250000
     },
     {
         "id": 2,
-        "user": "NUR ANGGRAENI",
-        "date_upload": "03-Feb-2025",
-        "periode": "03 - 03 Dec-2025",
-        "core_file": "CASHLESS COMMISION 01 - 03 DESEMBER 2025.xlsx",
-        "apex_file": "APEX COMMISION 01 - 03 DESEMBER 2025.xlsx"
+        "agen_id": "11153500",
+        "agen_name": "GEMILANG",
+        "nominal_pca": 250000
     },
     {
         "id": 3,
-        "user": "NUR ANGGRAENI",
-        "date_upload": "03-Feb-2025",
-        "periode": "03 - 03 Dec-2025",
-        "core_file": "CASHLESS COMMISION 01 - 03 DESEMBER 2025.xlsx",
-        "apex_file": "APEX COMMISION 01 - 03 DESEMBER 2025.xlsx"
+        "agen_id": "11153500",
+        "agen_name": "GEMILANG",
+        "nominal_pca": 250000
     },
     {
         "id": 4,
-        "user": "NUR ANGGRAENI",
-        "date_upload": "03-Feb-2025",
-        "periode": "03 - 03 Dec-2025",
-        "core_file": "CASHLESS COMMISION 01 - 03 DESEMBER 2025.xlsx",
-        "apex_file": "APEX COMMISION 01 - 03 DESEMBER 2025.xlsx"
+        "agen_id": "11153500",
+        "agen_name": "GEMILANG",
+        "nominal_pca": 250000
     },
     {
         "id": 5,
-        "user": "NUR ANGGRAENI",
-        "date_upload": "03-Feb-2025",
-        "periode": "03 - 03 Dec-2025",
-        "core_file": "CASHLESS COMMISION 01 - 03 DESEMBER 2025.xlsx",
-        "apex_file": "APEX COMMISION 01 - 03 DESEMBER 2025.xlsx"
+        "agen_id": "11153500",
+        "agen_name": "GEMILANG",
+        "nominal_pca": 250000
     },
     {
         "id": 6,
-        "user": "NUR ANGGRAENI",
-        "date_upload": "03-Feb-2025",
-        "periode": "03 - 03 Dec-2025",
-        "core_file": "CASHLESS COMMISION 01 - 03 DESEMBER 2025.xlsx",
-        "apex_file": "APEX COMMISION 01 - 03 DESEMBER 2025.xlsx"
+        "agen_id": "11153500",
+        "agen_name": "GEMILANG",
+        "nominal_pca": 250000
     },
     {
         "id": 7,
-        "user": "NUR ANGGRAENI",
-        "date_upload": "03-Feb-2025",
-        "periode": "03 - 03 Dec-2025",
-        "core_file": "CASHLESS COMMISION 01 - 03 DESEMBER 2025.xlsx",
-        "apex_file": "APEX COMMISION 01 - 03 DESEMBER 2025.xlsx"
+        "agen_id": "11153500",
+        "agen_name": "GEMILANG",
+        "nominal_pca": 250000
     },
     {
         "id": 8,
-        "user": "NUR ANGGRAENI",
-        "date_upload": "03-Feb-2025",
-        "periode": "03 - 03 Dec-2025",
-        "core_file": "CASHLESS COMMISION 01 - 03 DESEMBER 2025.xlsx",
-        "apex_file": "APEX COMMISION 01 - 03 DESEMBER 2025.xlsx"
+        "agen_id": "11153500",
+        "agen_name": "GEMILANG",
+        "nominal_pca": 250000
     },
     {
         "id": 9,
-        "user": "NUR ANGGRAENI",
-        "date_upload": "03-Feb-2025",
-        "periode": "03 - 03 Dec-2025",
-        "core_file": "CASHLESS COMMISION 01 - 03 DESEMBER 2025.xlsx",
-        "apex_file": "APEX COMMISION 01 - 03 DESEMBER 2025.xlsx"
+        "agen_id": "11153500",
+        "agen_name": "GEMILANG",
+        "nominal_pca": 250000
     },
     {
         "id": 10,
-        "user": "NUR ANGGRAENI",
-        "date_upload": "03-Feb-2025",
-        "periode": "03 - 03 Dec-2025",
-        "core_file": "CASHLESS COMMISION 01 - 03 DESEMBER 2025.xlsx",
-        "apex_file": "APEX COMMISION 01 - 03 DESEMBER 2025.xlsx"
+        "agen_id": "11153500",
+        "agen_name": "GEMILANG",
+        "nominal_pca": 250000
     }
 ]
