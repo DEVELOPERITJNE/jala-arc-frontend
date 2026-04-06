@@ -19,8 +19,8 @@ export const dashboardTableHeaders = [
         align: 'center',
         headerProps:{class: 'header-purple font-weight-bold'},
         children: [
-            { title: 'Implants', key: 'omset_implants', headerProps:{class: 'header-purple font-weight-bold'}, },
-            { title: 'Utama', key: 'omset_utama', headerProps:{class: 'header-purple font-weight-bold'}, }
+            { title: 'Implants', key: 'omset_implants', headerProps:{class: 'header-purple font-weight-bold'}},
+            { title: 'Utama', key: 'omset_utama', headerProps:{class: 'header-purple font-weight-bold'}}
         ]
     },
 
@@ -35,16 +35,7 @@ export const dashboardTableHeaders = [
     }
 ]
 
-export const createColumn = ({
-    key,
-    title,
-    type = 'text',
-    sortable = true,
-    align,
-    width,
-    hidden = false,
-    children = null
-}) => ({
+export const createColumn = ({ key, title, type = 'text', sortable = true, align, width, hidden = false, children = null }) => ({
     key,
     title,
     type,
@@ -75,7 +66,7 @@ export const columnTypes = {
     number: {
         format: (value) => {
         if (value == null) return '-'
-        return new Intl.NumberFormat('id-ID').format(Number(value))
+            return new Intl.NumberFormat('id-ID').format(Number(value))
         }
     },
 
