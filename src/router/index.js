@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router';
 
 import HomeView from '../views/BaseHomeView.vue';
 import BaseIndex from '../views/BaseIndex.vue';
@@ -12,7 +12,7 @@ import BaseReportView from '../views/BaseReportView.vue';
 
 const routes = [
     {
-        path: '/app',
+        path: '/',
         redirect: {name: 'Home.view'},
         component: BaseIndex,
         children: [
@@ -84,7 +84,7 @@ const routes = [
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory('/app/'),
     routes,
 });
 
