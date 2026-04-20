@@ -95,7 +95,7 @@
                 </v-icon>
             </v-btn>
 
-            <div class="d-none d-md-flex align-items-center">Hello, <span class="text-red mx-1 no-wrap">{{ AUTH_USER?.name }}</span></div>
+            <div class="d-none d-md-flex align-items-center">Hello, <span class="text-red mx-1 no-wrap">{{ getAUTH_PROFILE?.name }}</span></div>
             <v-menu offset-y>
                 <template #activator="{ props }">
                     <v-btn icon v-bind="props">
@@ -223,7 +223,7 @@
 
 <script>
 
-import { AUTH_USER, SOCKET_CLIENT, LOGOUT } from '../stores/actions/reqApi';
+import { AUTH_PROFILE, SOCKET_CLIENT, LOGOUT } from '../stores/actions/reqApi';
 import { mapActions, mapMutations, mapGetters, mapState } from 'vuex';
 
 export default {
@@ -281,7 +281,7 @@ export default {
             return activeRoutes.includes(this.$route.name);
         },
         ...mapGetters({
-            AUTH_USER:'auth/'+AUTH_USER,
+            getAUTH_PROFILE:'auth/'+AUTH_PROFILE,
         })
     },
     methods: {

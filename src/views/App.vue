@@ -25,7 +25,7 @@
 </style>
 
 <script>
-import { LIBRARY_GET_CATEGORY, LIBRARY_GET_USER } from '../stores/actions/reqApi';
+import { AUTH_PROFILE } from '../stores/actions/reqApi';
 import { mapActions } from 'vuex';
 import Header from '../components/Header.vue';
 import Footer from '../components/Footer.vue';
@@ -48,14 +48,12 @@ export default {
             this.drawer_app = !this.drawer_app
         },
         ...mapActions({
-            act_LIBRARY_GET_CATEGORY: 'library/'+LIBRARY_GET_CATEGORY,
-            act_LIBRARY_GET_USER: 'user/'+LIBRARY_GET_USER,
+            act_AUTH_PROFILE: 'auth/'+AUTH_PROFILE,
         }),
     },
     created() {
         this.$nextTick(async()=>{
-            // await this.act_LIBRARY_GET_CATEGORY();
-            // await this.act_LIBRARY_GET_USER();
+            this.act_AUTH_PROFILE();
         })
     },
 }
