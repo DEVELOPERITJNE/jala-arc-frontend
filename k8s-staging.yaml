@@ -1,0 +1,428 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    version: "v20"
+  name: jala-arc
+  namespace: k8s-arc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jala-arc
+  template:
+    metadata:
+      labels:
+        app: jala-arc
+    spec:
+      imagePullSecrets:
+        - name: registry-1
+      containers:
+        - name: nginx
+          image: nginx:1.26.3-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+            - name: default-conf
+              mountPath: /etc/nginx/sites-enabled/
+            - name: snippets-conf
+              mountPath: /etc/nginx/snippets
+            - name: error-pages-403
+              mountPath: /usr/share/nginx/html/error403.html
+              subPath: error403.html
+            - name: error-pages-404
+              mountPath: /usr/share/nginx/html/error404.html
+              subPath: error404.html
+            - name: nginx-confd
+              mountPath: /etc/nginx/conf.d/location.upstream.conf
+              subPath: location.upstream.conf
+            - name: nginx-confd
+              mountPath: /etc/nginx/conf.d/log-format.conf
+              subPath: log-format.conf
+
+
+        - name: arc
+          image: docker-registry.jalaniagaelok.web.id/arcdev:1.12beta
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: app
+              containerPort: 80
+
+      volumes:
+        - name: error-pages-403
+          configMap:
+            name: nginx-403
+        - name: error-pages-404
+          configMap:
+            name: nginx-404
+        - name: snippets-conf
+          configMap:
+            name: nginx-snippets
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
+        - name: default-conf
+          configMap:
+            name: arc-nginx-conf
+        - name: nginx-confd
+          configMap:
+            name: nginx-confd
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+  namespace: k8s-arc
+data:
+  nginx.conf: |
+    worker_processes auto;
+      pid        /var/run/nginx.pid;
+      error_log  /var/log/nginx/error.log;
+
+      # include /etc/nginx/modules-enabled/*.conf;
+      events {
+        worker_connections 1024;
+        multi_accept on;
+      }
+
+      http {
+        resolver 10.96.0.10 valid=30s;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3; # Dropping SSLv3, ref: POODLE
+        ssl_prefer_server_ciphers on;
+
+        sendfile on;
+        tcp_nopush on;
+        types_hash_max_size 2048;
+        server_tokens off;
+        chunked_transfer_encoding off;
+
+        include       /etc/nginx/mime.types;
+        default_type  application/octet-stream;
+
+        gzip on;
+        gzip_comp_level 6;
+        gzip_buffers 16 8k;
+        gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript application/protobuf;
+
+        server {
+            listen 8080;
+            port_in_redirect off;
+
+            # variable auth
+            include /etc/nginx/snippets/auth0.variable.conf;
+            include /etc/nginx/snippets/auth0.location.auth_frontend.conf;
+            include /etc/nginx/snippets/auth0.location.auth_api.conf;
+            include /etc/nginx/snippets/auth0.location.auth_redirect_login.conf;
+            include /etc/nginx/snippets/auth0.location.callback.conf;
+
+            error_page 403 /error403.html;
+            error_page 404 /error404.html;
+
+            # Lokasi file error berada
+            location ~ /error(404|403)\.html {
+                root /usr/share/nginx/html;
+                internal; # Hanya bisa diakses secara internal oleh Nginx
+            }
+            error_page   500 502 503 504  /50x.html;
+            location = /50x.html {
+                root   /usr/share/nginx/html;
+                internal; # Hanya bisa diakses secara internal oleh Nginx
+            }
+
+            set $auth_redirect_uri "https://arc.jalaera.com/callback";
+            set $auth_scope "";
+            set $auth_client_id "28";
+            set $auth_client_secret "rdYnS7w6b41FYVyyqWnxrqPqy31KRo1odnq6Si2R";
+            set $auth_start_uri "https://arc.jalaera.com/app";
+
+            location ~* ^/app/(assets/|js/|css/|img/|images/|fonts/|manifest\.json) {
+              expires 30d;  # Cache file statis selama 30 hari
+              add_header Cache-Control "public, max-age=2592000";  # Header cache
+              access_log off;  # Matikan logging untuk file statis agar log lebih bersih
+              proxy_set_header Connection ""; # handle dns cache
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_pass http://127.0.0.1:80;
+            }
+
+            location /api/ {
+              auth_request /auth0_api_request;
+              auth_request_set $resp_client_id $upstream_http_x_client_id;
+              auth_request_set $resp_app_id $upstream_http_x_app_id;
+              auth_request_set $resp_branch_id $upstream_http_x_branch_id;
+              auth_request_set $resp_user $upstream_http_x_user;
+              auth_request_set $resp_user_id $upstream_http_x_user_id;
+              auth_request_set $resp_role_id $upstream_http_x_role_id;
+              auth_request_set $resp_role_tag_id $upstream_http_x_role_tag_id;
+              auth_request_set $resp_toaccess_id $upstream_http_x_toaccess_id;
+              auth_request_set $resp_todevice_id $upstream_http_x_todevice_id;
+              auth_request_set $resp_is_admin $upstream_http_x_is_admin;
+              
+              proxy_request_buffering off;
+              proxy_buffering off;
+              proxy_set_header Connection ""; # handle dns cache
+
+              proxy_pass http://jalaauth2-svc.k8s-rbac.svc.cluster.local:80/rbac/;
+              
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_set_header X-User-Id $resp_user_id;
+              proxy_set_header X-User $resp_user;
+              proxy_set_header X-Role-Id $resp_role_id;
+              proxy_set_header X-IS-ADMIN $resp_is_admin;
+            }
+
+            location /app/ {
+
+              auth_request /auth0_request;
+              auth_request_set $auth_state $upstream_http_x_auth_state;
+              auth_request_set $auth_session_id $upstream_http_x_auth_session_id;
+              error_page 401 = @auth0_redirect_login;
+
+              proxy_buffer_size          128k;
+              proxy_buffers              4 256k;
+              proxy_busy_buffers_size    256k;
+              proxy_set_header Connection ""; # handle dns cache
+              proxy_pass http://127.0.0.1:80;
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+            }
+
+            # fallback (optional)
+            # location / {
+            #     return 302 https://$host/app;
+            # }
+        }
+    }
+    
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: arc-nginx-conf
+  namespace: k8s-arc
+data:
+  arc.conf: |
+    
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-snippets
+  namespace: k8s-arc
+data:
+  auth0.location.auth_api.conf: |
+    location /auth0_api_request{
+      internal;
+      proxy_set_header Connection ""; # handle dns cache
+      proxy_pass http://auth0-svc.k8s-rbac.svc.cluster.local:8180/api/auth0/web-backend/verify?verify_uri=http://jalaauth2-svc:80/api/user/check$is_args$args;
+      proxy_set_header Authorization $http_authorization;
+      proxy_set_header Accept "application/json";
+      proxy_set_header X-Client-ID $http_x_client_id;
+      proxy_http_version 1.0;
+      proxy_hide_header Content-Length;
+      proxy_hide_header Transfer-Encoding;
+      proxy_set_header Content-Length "";
+      proxy_pass_request_body off;
+      proxy_set_header Cookie $http_cookie;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      # proxy_set_header X-Client-Id $auth_client_id;
+      proxy_set_header X-Redirect-Uri $auth_redirect_uri;
+      proxy_set_header X-Response-Type "";
+      proxy_set_header X-Scope "";
+    }
+  auth0.location.auth_frontend.conf: |
+    location /auth0_request{
+      internal;
+      proxy_http_version 1.1;
+      proxy_set_header Connection "";
+      proxy_pass http://auth0-svc.k8s-rbac.svc.cluster.local:8180/api/auth0/web-frontend/verify;
+      proxy_set_header Content-Length "";
+      proxy_pass_request_body off;
+      proxy_set_header Accept "application/json";
+      proxy_set_header Cookie $http_cookie;
+      proxy_set_header X-Original-URI $request_uri;
+      proxy_set_header X-Client-Id $auth_client_id;
+      proxy_set_header X-Redirect-Uri $auth_redirect_uri;
+      proxy_set_header X-Response-Type "";
+      proxy_set_header X-Scope "";
+    }
+  auth0.location.auth_redirect_login.conf: |
+    location @auth0_redirect_login {
+      return 302 https://jalaera.com/services/account/oauth/authorize?state=$auth_state&client_id=$auth_client_id&redirect_uri=$auth_redirect_uri&response_type=$auth_response_type&scope=$auth_scope;
+    }
+  auth0.location.callback.conf: |
+    location /callback {
+      # forward header juga
+      proxy_set_header Connection ""; # handle dns cache
+      proxy_set_header X-Client-id $auth_client_id;
+      proxy_set_header X-Client-Secret $auth_client_secret;
+      proxy_set_header X-Start-Uri $auth_start_uri;
+      proxy_set_header X-Redirect-Uri $auth_redirect_uri;
+      proxy_set_header X-Code $arg_code;
+      proxy_set_header X-State $arg_state;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Set-Cookie $http_cookie;
+
+      # forward to auth0
+      proxy_pass http://auth0-svc.k8s-rbac.svc.cluster.local:8180/api/auth0/web-frontend/callback?code=$arg_code&state=$arg_state&index=$arg_index&redirect_uri=$auth_redirect_uri&client_id=$auth_client_id&client_secret=$auth_client_secret&start_uri=$auth_start_uri&cookie_name=$auth_cookie&cookie_domain=$auth_cookie_domain;
+    }
+  auth0.variable.conf: |
+    set $auth_index "0";
+    set $auth_cookie "dapi2";
+    set $auth_cookie_domain "";
+    set $auth_state "";
+    set $auth_redirect_uri "";
+    set $auth_scope "";
+    set $auth_client_id "";
+    set $auth_client_secret "";
+    set $auth_response_type "code";
+    set $auth_start_uri "";
+    set $auth_app_id "";
+    set $auth_branch_id "";
+    set $auth_user "";
+    set $auth_user_id "";
+    set $auth_role_id "";
+    set $auth_role_tag_id "";
+    set $auth_toaccess_id "";
+    set $auth_todevice_id "";
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-confd
+  namespace: k8s-arc
+data:
+  location.upstream.conf: |
+    upstream auth0_backend{
+      server auth0-svc.k8s-rbac.svc.cluster.local:8180;
+    }
+
+    upstream wss_backend{
+        server wss-worker-svc.k8s-rbac.svc.cluster.local:4001;
+    }
+
+    upstream jalaauth2_backend{
+        server jalaauth2-svc.k8s-rbac.svc.cluster.local:80;
+    }
+
+    upstream mail0_backend{
+        server mail0-svc.k8s-rbac.svc.cluster.local:8180;
+    }
+
+    upstream rbac_frontend{
+        server rbac-svc.k8s-rbac.svc.cluster.local:3000;
+    }
+
+    upstream rbac_backend{
+        server jalaauth2-svc.k8s-rbac.svc.cluster.local:80;
+    }
+  log-format.conf: |
+    #log_format fastcgi_log '$request $request_method $uri $fastcgi_script_name $document_root';
+    #access_log /var/log/nginx/fastcgi_log.log fastcgi_log;
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-403
+  namespace: k8s-arc
+data:
+  error403.html: |
+    <html>
+      <head><title>403 Forbidden</title></head>
+      <body>
+        <h1>403 Forbidde<!DOCTYPE html>
+          <html lang="id">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Akses Terbatas - 403</title>
+                <script src="https://cdn.tailwindcss.com"></script>
+            </head>
+            <body class="bg-gray-50 flex items-center justify-center h-screen">
+                <div class="text-center px-4">
+                    <div class="mb-6 text-red-500">
+                        <span class="text-8xl">🚫</span>
+                    </div>
+                    <h1 class="text-4xl font-bold text-gray-800 mb-2">Area Terbatas</h1>
+                    <p class="text-gray-600 mb-8 max-w-md mx-auto">
+                        Maaf ya, akun Anda tidak memiliki izin untuk masuk ke sini. Jika Anda merasa ini kesalahan, silakan hubungi tim IT.
+                    </p>
+                    <div class="space-y-4">
+                        <button onclick="window.history.back()" class="bg-gray-800 hover:bg-black text-white font-semibold py-3 px-8 rounded-lg transition duration-300 w-full sm:w-auto">
+                            Kembali ke Halaman Sebelumnya
+                        </button>
+                        <p class="text-sm text-gray-400">Error Code: 403 - Forbidden</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+          n</h1>
+        <p>Access denied.</p>
+      </body>
+    </html>
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-404
+  namespace: k8s-arc
+data:
+  error404.html: |
+    <!DOCTYPE html>
+      <html lang="id">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Halaman Tidak Ditemukan - 404</title>
+          <script src="https://cdn.tailwindcss.com"></script>
+      </head>
+      <body class="bg-slate-50 flex items-center justify-center h-screen">
+          <div class="text-center px-4">
+              <div class="mb-6">
+                  <span class="text-8xl animate-bounce inline-block">🔦</span>
+              </div>
+              <h1 class="text-6xl font-extrabold text-slate-900 mb-4">404</h1>
+              <h2 class="text-2xl font-bold text-slate-800 mb-2">Waduh, Halamannya Hilang!</h2>
+              <p class="text-slate-600 mb-8 max-w-md mx-auto">
+                  Sepertinya tautan yang Anda klik rusak atau halamannya sudah dipindahkan ke tempat lain yang lebih rahasia.
+              </p>
+              <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                  <button onclick="window.history.back()" class="bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-semibold py-3 px-8 rounded-full transition duration-300">
+                      Kembali Ke Halaman Sebelumnya
+                  </button>
+              </div>
+            </div>
+        </body>
+      </html>
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jala-arc-svc
+  namespace: k8s-arc
+spec:
+  selector:
+    app: jala-arc
+  ports:
+    - port: 8082
+      targetPort: 8080
+  type: ClusterIP
