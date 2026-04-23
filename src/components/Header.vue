@@ -104,8 +104,11 @@
                         </v-avatar>
                     </v-btn>
                 </template>
+                <v-card min-width="430" min-height="500" class="pa-2">
+                    <iframe role="presentation" title="account" frameborder="0" scrolling="yes" name="account" :src="panelUrl" style="height: 100%; width: 100%;" ref="panel-account"></iframe>
+                </v-card>
 
-                <v-card min-width="220" class="pa-2">
+                <!-- <v-card min-width="220" class="pa-2">
                     <v-list>
                         <v-list-item>
                             <v-list-item-title>Profile</v-list-item-title>
@@ -139,7 +142,7 @@
                             </v-dialog>
                         </v-list-item>
                     </v-list>
-                </v-card>
+                </v-card> -->
             </v-menu>
             
         </v-app-bar>
@@ -233,6 +236,7 @@ export default {
     name: 'Header',
     data() { 
         return { 
+            panelUrl: import.meta.env.VITE_APP_PANEL_ACCOUNT_URL,
             drawer: false,
             drawer_app: false,
             dialog: false,
