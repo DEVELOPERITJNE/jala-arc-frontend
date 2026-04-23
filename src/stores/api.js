@@ -25,11 +25,9 @@ $axInstance.interceptors.request.use(
 
 $axInstance.interceptors.response.use(
     function (response) {
-        // nprogressCustomDone()
         return response;
     },
     async function (error) {
-        // nprogressCustomDone()
         const originalRequest = error.config;
         if (error.code != "ERR_NETWORK" && error.response) {
             const errMessage = { status: error.response.status }

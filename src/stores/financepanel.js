@@ -16,7 +16,7 @@ const getters = {
 const actions = { 
     [DT_MANAGEMENT]:async ({commit})=>{
         return new Promise((resolve,reject)=>{
-            $axInstance.get('app/data/datamanagement.json').then(resp => {
+            $axInstance.get('/datamanagement.json').then(resp => {
                 commit(DT_MANAGEMENT,resp);
                 resolve(resp);
             }).catch(err => {
@@ -27,7 +27,7 @@ const actions = {
     },
     [DT_CLAIM]:async ({commit})=>{
         return new Promise((resolve,reject)=>{
-            $axInstance.get('app/data/datamanagementClaim.json').then(resp => {
+            $axInstance.get('/datamanagementClaim.json').then(resp => {
                 commit(DT_CLAIM,resp);
                 resolve(resp);
             }).catch(err => {
@@ -38,7 +38,7 @@ const actions = {
     },
     [VALIDATION_RECON_GETLIST]:async ({commit})=>{
         return new Promise((resolve,reject)=>{
-            $axInstance.get('app/data/validation-recon-data.json').then(resp => {
+            $axInstance.get('/validation-recon-data.json').then(resp => {
                 commit(VALIDATION_RECON_GETLIST,resp);
                 resolve(resp);
             }).catch(err => {

@@ -12,7 +12,7 @@ const getters = {
 const actions = { 
     [DASHBOARD_DATA]:async ({commit})=>{
         return new Promise((resolve,reject)=>{
-            $axInstance.get('app/data/dashboard.json').then(resp => {
+            $axInstance.get('/dashboard.json').then(resp => {
                 commit(DASHBOARD_DATA,resp);
                 resolve(resp);
             }).catch(err => {

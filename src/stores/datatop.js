@@ -12,7 +12,7 @@ const getters = {
 const actions = { 
     [TOP_TEN]:async ({commit})=>{
         return new Promise((resolve,reject)=>{
-            $axInstance.get('app/data/toptenreport.json').then(resp => {
+            $axInstance.get('/toptenreport.json').then(resp => {
                 commit(TOP_TEN,resp);
                 resolve(resp);
             }).catch(err => {
