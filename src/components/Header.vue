@@ -208,6 +208,9 @@
 }
 
 .router-wrapper { 
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     height: 100% !important;
     align-items: center;
     justify-content: center;
