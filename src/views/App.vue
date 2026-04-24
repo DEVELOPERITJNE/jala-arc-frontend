@@ -44,6 +44,12 @@ export default {
         }
     },
     methods: {
+        handleIframeMessage(event) {
+            console.log('event => ',event)
+            if (event.data?.action === 'RELOAD_PARENT') {
+                window.location.reload()
+            }
+        },
         toggleDrawer() {
             this.drawer_app = !this.drawer_app
         },
@@ -56,6 +62,11 @@ export default {
             this.act_AUTH_PROFILE();
         })
     },
+    mounted() {
+        window.addEventListener('message', this.handleIframeMessage)
+    },
+    beforeMount(){
+        window.removeEventListener('message', this.handleIframeMessage)
+    }
 }
-
 </script>
