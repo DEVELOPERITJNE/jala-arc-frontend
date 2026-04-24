@@ -96,7 +96,7 @@
             </v-btn>
 
             <div class="d-none d-md-flex align-items-center">Hello, <span class="text-red mx-1 no-wrap">{{ getAUTH_PROFILE?.name }}</span></div>
-            <v-menu offset-y>
+            <v-menu offset-y eager>
                 <template #activator="{ props }">
                     <v-btn icon v-bind="props">
                         <v-avatar size="36">
