@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    version: "v20"
+    version: "v25"
   name: jala-arc
   namespace: k8s-arc
 spec:
@@ -47,7 +47,7 @@ spec:
 
 
         - name: arc
-          image: docker-registry.jalaniagaelok.web.id/arcdev:1.12beta
+          image: docker-registry.jalaniagaelok.web.id/arcdev:1.21beta
           imagePullPolicy: IfNotPresent
           ports:
             - name: app
@@ -85,46 +85,50 @@ data:
     worker_processes auto;
       pid        /var/run/nginx.pid;
       error_log  /var/log/nginx/error.log;
-
+    
       # include /etc/nginx/modules-enabled/*.conf;
       events {
         worker_connections 1024;
         multi_accept on;
       }
-
+    
       http {
         resolver 10.96.0.10 valid=30s;
+        log_format debug_log '$remote_addr "$request" status=$status uri=$uri upstream=$upstream_addr upstream_status=$upstream_status ua="$http_user_agent"' ref="$http_referer" cookie="$http_cookie"';
+        access_log /dev/stdout debug_log;
         ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3; # Dropping SSLv3, ref: POODLE
         ssl_prefer_server_ciphers on;
-
+    
         sendfile on;
         tcp_nopush on;
         types_hash_max_size 2048;
         server_tokens off;
         chunked_transfer_encoding off;
-
+    
         include       /etc/nginx/mime.types;
         default_type  application/octet-stream;
-
+    
         gzip on;
         gzip_comp_level 6;
         gzip_buffers 16 8k;
         gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript application/protobuf;
-
+    
         server {
             listen 8080;
             port_in_redirect off;
-
+    
             # variable auth
             include /etc/nginx/snippets/auth0.variable.conf;
             include /etc/nginx/snippets/auth0.location.auth_frontend.conf;
             include /etc/nginx/snippets/auth0.location.auth_api.conf;
             include /etc/nginx/snippets/auth0.location.auth_redirect_login.conf;
             include /etc/nginx/snippets/auth0.location.callback.conf;
-
+            include /etc/nginx/snippets/auth0.location.auth_api_option.conf;
+            include /etc/nginx/snippets/auth0.location.start.conf;
+    
             error_page 403 /error403.html;
             error_page 404 /error404.html;
-
+    
             # Lokasi file error berada
             location ~ /error(404|403)\.html {
                 root /usr/share/nginx/html;
@@ -135,13 +139,13 @@ data:
                 root   /usr/share/nginx/html;
                 internal; # Hanya bisa diakses secara internal oleh Nginx
             }
-
+    
             set $auth_redirect_uri "https://arc.jalaera.com/callback";
             set $auth_scope "";
             set $auth_client_id "28";
             set $auth_client_secret "rdYnS7w6b41FYVyyqWnxrqPqy31KRo1odnq6Si2R";
             set $auth_start_uri "https://arc.jalaera.com/app";
-
+    
             location ~* ^/app/(assets/|js/|css/|img/|images/|fonts/|manifest\.json) {
               expires 30d;  # Cache file statis selama 30 hari
               add_header Cache-Control "public, max-age=2592000";  # Header cache
@@ -153,7 +157,7 @@ data:
               proxy_set_header X-Forwarded-Proto $scheme;
               proxy_pass http://127.0.0.1:80;
             }
-
+    
             location /api/ {
               auth_request /auth0_api_request;
               auth_request_set $resp_client_id $upstream_http_x_client_id;
@@ -170,8 +174,11 @@ data:
               proxy_request_buffering off;
               proxy_buffering off;
               proxy_set_header Connection ""; # handle dns cache
-
-              proxy_pass http://jalaauth2-svc.k8s-rbac.svc.cluster.local:80/rbac/;
+    
+              # proxy_pass http://jalaauth2-svc.k8s-rbac.svc.cluster.local:80/rbac/;
+              
+              proxy_pass http://10.108.255.2:80/rbac/;
+              proxy_redirect ~^/rbac/(.*)$ /api/$1;
               
               proxy_set_header Host $host;
               proxy_set_header X-Real-IP $remote_addr;
@@ -182,32 +189,61 @@ data:
               proxy_set_header X-Role-Id $resp_role_id;
               proxy_set_header X-IS-ADMIN $resp_is_admin;
             }
-
-            location /app/ {
-
+    
+            location = /app {
+    
               auth_request /auth0_request;
               auth_request_set $auth_state $upstream_http_x_auth_state;
               auth_request_set $auth_session_id $upstream_http_x_auth_session_id;
               error_page 401 = @auth0_redirect_login;
-
+    
+              proxy_intercept_errors on;
+              error_page 404 = @fallback_to_index;
+    
               proxy_buffer_size          128k;
               proxy_buffers              4 256k;
               proxy_busy_buffers_size    256k;
               proxy_set_header Connection ""; # handle dns cache
+              proxy_pass http://127.0.0.1:80/app/index.html;
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+          }
+          
+          location @fallback_to_index {
+              rewrite ^ /app/index.html break;
+              proxy_pass http://127.0.0.1:80;
+              proxy_set_header Host $host;
+          }
+    
+          location /app/ {
+              auth_request /auth0_request;
+              auth_request_set $auth_state $upstream_http_x_auth_state;
+              auth_request_set $auth_session_id $upstream_http_x_auth_session_id;
+              error_page 401 = @auth0_redirect_login;
+    
+              proxy_intercept_errors on;
+              error_page 404 = @fallback_to_index;
+    
+              proxy_hide_header Cache-Control;
+              proxy_hide_header ETag;
+              proxy_hide_header Last-Modified;
+              add_header Cache-Control "no-store, no-cache, must-revalidate";
+    
+              proxy_buffer_size          128k;
+              proxy_buffers              4 256k;
+              proxy_busy_buffers_size    256k;
+              proxy_set_header Connection "";
               proxy_pass http://127.0.0.1:80;
               proxy_set_header Host $host;
               proxy_set_header X-Real-IP $remote_addr;
               proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
               proxy_set_header X-Forwarded-Proto $scheme;
-            }
-
-            # fallback (optional)
-            # location / {
-            #     return 302 https://$host/app;
-            # }
+          }
         }
     }
-    
+ 
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -224,11 +260,71 @@ metadata:
   name: nginx-snippets
   namespace: k8s-arc
 data:
+  auth0.location.auth_api_option.conf: |
+    location /auth0_api_option_request{
+      internal;
+      proxy_set_header Connection "";
+      # proxy_pass http://auth0-svc.k8s-rbac.svc.cluster.local:8180/api/auth0/web-backend/verify?is_internal=true&verify_uri=http://jalaauth2-svc.k8s-rbac.svc.cluster.local:80/auth/t/status$is_args$args;
+      set $auth0_backend http://auth0-svc.k8s-rbac.svc.cluster.local:8180;
+      proxy_pass $auth0_backend/api/auth0/web-backend/verify?is_internal=true&verify_uri=http://jalaauth2-svc:80/auth/t/status$is_args$args;
+      proxy_set_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0";
+      proxy_set_header Authorization $http_x_authorization;
+      proxy_set_header Accept "application/json";
+      proxy_set_header Content-Type "application/json";
+      proxy_set_header X-Client-ID $http_x_client_id;
+      proxy_set_header X-Original-URI $request_uri;
+      proxy_set_header X-Redirect-Uri $auth_redirect_uri;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Response-Type "";
+      proxy_set_header X-Scope "";
+      proxy_http_version 1.0;
+      proxy_pass_request_body off;
+    }
+  auth0.location.start.conf: |
+    location ~* ^/(css|js)/ {
+      set $start_service http://arc-start-service-svc.k8s-arc.svc.cluster.local:8180;
+      proxy_pass $start_service;
+      
+      expires 30d;
+      add_header Cache-Control "public, max-age=2592000";
+      access_log off;
+      proxy_set_header Connection "";
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    
+    location /option {
+      add_header Cache-Control "public, no-store, max-age=0";
+      auth_request /auth0_api_option_request;
+      auth_request_set $state $upstream_http_x_android_state_challenge;
+      auth_request_set $code $upstream_http_x_android_code_challenge;
+      error_page 401 = /app;  # Handle 401 error with a custom location
+
+      proxy_buffer_size          128k;
+      proxy_buffers              4 256k;
+      proxy_busy_buffers_size    256k;
+      proxy_set_header Connection ""; # handle dns cache
+
+      proxy_set_header X-App-Context "theme=dark;androidDownloadUrl=https://osion.com;androidUrl=myapp://MainActivity?state=${state}&code=$code;appName=ARC;webUrl=https://arc.jalaera.com/app/;";
+      set $start_service http://arc-start-service-svc.k8s-arc.svc.cluster.local:8180;
+      proxy_pass $start_service/;
+
+      proxy_http_version 1.1;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+    }
   auth0.location.auth_api.conf: |
     location /auth0_api_request{
       internal;
       proxy_set_header Connection ""; # handle dns cache
-      proxy_pass http://auth0-svc.k8s-rbac.svc.cluster.local:8180/api/auth0/web-backend/verify?verify_uri=http://jalaauth2-svc:80/api/user/check$is_args$args;
+      set $auth0_backend http://auth0-svc.k8s-rbac.svc.cluster.local:8180;
+      proxy_pass $auth0_backend/api/auth0/web-backend/verify?verify_uri=http://jalaauth2-svc.k8s-rbac.svc.cluster.local:80/api/user/check$is_args$args;
+      
+      # proxy_pass http://auth0-svc.k8s-rbac.svc.cluster.local:8180/api/auth0/web-backend/verify?verify_uri=http://jalaauth2-svc.k8s-rbac.svc.cluster.local:80/api/user/check$is_args$args;
       proxy_set_header Authorization $http_authorization;
       proxy_set_header Accept "application/json";
       proxy_set_header X-Client-ID $http_x_client_id;
@@ -239,17 +335,22 @@ data:
       proxy_pass_request_body off;
       proxy_set_header Cookie $http_cookie;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      # proxy_set_header X-Client-Id $auth_client_id;
       proxy_set_header X-Redirect-Uri $auth_redirect_uri;
       proxy_set_header X-Response-Type "";
       proxy_set_header X-Scope "";
+      proxy_set_header X-Access-Id 1;
+      proxy_set_header X-Device-Id 2;
+      proxy_set_header X-App-Id 28;
+      proxy_set_header X-Branch-Id 1;
     }
   auth0.location.auth_frontend.conf: |
     location /auth0_request{
       internal;
       proxy_http_version 1.1;
       proxy_set_header Connection "";
-      proxy_pass http://auth0-svc.k8s-rbac.svc.cluster.local:8180/api/auth0/web-frontend/verify;
+      set $auth0_upstream http://auth0-svc.k8s-rbac.svc.cluster.local:8180;
+      proxy_pass $auth0_upstream/api/auth0/web-frontend/verify;
+      # proxy_pass http://auth0-svc.k8s-rbac.svc.cluster.local:8180/api/auth0/web-frontend/verify;
       proxy_set_header Content-Length "";
       proxy_pass_request_body off;
       proxy_set_header Accept "application/json";
