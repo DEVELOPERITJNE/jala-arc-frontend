@@ -6,8 +6,10 @@ import fs from 'fs';
 export default ({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return defineConfig({
-    plugins: [vue()],
-    base: '/app/',
+    plugins: [
+      vue()
+    ],
+    base: '/app',
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '/src'),
@@ -50,12 +52,12 @@ export default ({ mode }) => {
       port: 443,
       // https: true,
       https: {
-        key: fs.readFileSync('./crt/arc-dev.jalaera.com-key.pem'),
-        cert: fs.readFileSync('./crt/arc-dev.jalaera.com.pem'),
+        key: fs.readFileSync('./crt/arc-jalaera.id-key.pem'),
+        cert: fs.readFileSync('./crt/arc-jalaera.id.pem'),
       },
       hmr: {
         protocol: 'wss',
-        host: 'arc-dev.jalaera.com',
+        host: 'arc-jalaera.id',
         clientPort: 443,
       },
       cors: { 
