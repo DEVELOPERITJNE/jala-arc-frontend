@@ -21,7 +21,7 @@ const mutations = {
 const actions = {
     [AUTH_PROFILE]({ commit, dispatch, rootState }, payload) {
         return new Promise((resolve, reject) => {
-            $axInstance.get(`${import.meta.env.VITE_APP_OAUTH_URL}/myprofile`).then(async(response) => {
+            $axInstance.get(`${import.meta.env.VITE_APP_OAUTH_API}/myprofile`).then(async(response) => {
                 resolve(response?.data)
                 commit(AUTH_PROFILE,response?.data)
             }).catch(async (error) => {
