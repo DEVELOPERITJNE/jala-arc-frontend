@@ -1,6 +1,6 @@
 <template>
     <div class="main-header">
-        <v-app-bar color="ligthCustom" class="px-10">
+        <v-app-bar color="ligthCustom" class="px-10" >
             <v-app-bar-nav-icon @click="drawer = !drawer" class="d-md-none">
                 <v-icon icon="fa-solid fa-bars" />
             </v-app-bar-nav-icon>
@@ -105,44 +105,8 @@
                     </v-btn>
                 </template>
                 <v-card min-width="430" min-height="500" class="pa-2">
-                    <iframe role="presentation" title="account" frameborder="0" scrolling="yes" name="account" :src="panelUrl" style="height: 100%; width: 100%;" ref="panel-account"></iframe>
+                    <iframe role="presentation" title="account" frameborder="0" name="account" :src="panelUrl" style="height: 100%; width: 100%;" ref="panel-account"></iframe>
                 </v-card>
-
-                <!-- <v-card min-width="220" class="pa-2">
-                    <v-list>
-                        <v-list-item>
-                            <v-list-item-title>Profile</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item>
-                            <v-list-item-title>Settings</v-list-item-title>
-                        </v-list-item>
-                        <v-divider></v-divider>
-                        <v-list-item>
-                            <v-dialog v-model="dialog" max-width="400" persistent>
-                                <template v-slot:activator="{props: activatorProps}">
-                                    <v-btn v-bind="activatorProps" color="error" variant="tonal">
-                                        Log Out
-                                    </v-btn>
-                                </template>
-                                <v-card
-                                    prepend-icon="mdi-map-marker"
-                                    text="Are you sure to log out ? this action will logging out all application you've been login !"
-                                    title="Log Out"
-                                >
-                                    <template v-slot:actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn @click="dialog = false">
-                                        Disagree
-                                    </v-btn>
-                                    <v-btn @click="logout_action">
-                                        Agree
-                                    </v-btn>
-                                    </template>
-                                </v-card>
-                            </v-dialog>
-                        </v-list-item>
-                    </v-list>
-                </v-card> -->
             </v-menu>
             
         </v-app-bar>
