@@ -1,19 +1,23 @@
 import {$axInstance} from './api.js';
-import { AUTH_PROFILE } from './actions/reqApi.js';
-const APP_JWT_SECRET = import.meta.env.VITE_APP_JWT_SECRET;
-import 'url-search-params-polyfill';
+import { AUTH_PROFILE, IS_403 } from './actions/reqApi.js';
 
 const state = {
     AUTH_PROFILE:{},
+    IS_403: false
+
 };
 
 const getters = {
     [AUTH_PROFILE] : state => state.AUTH_PROFILE,
+    [IS_403] : state => state.IS_403,
 };
 
 const mutations = { 
     [AUTH_PROFILE](state, resp){
         state.AUTH_PROFILE = resp;
+    },
+    [IS_403](state, resp){
+        state.IS_403 = resp;
     },
 }
 
@@ -21,14 +25,15 @@ const mutations = {
 const actions = {
     [AUTH_PROFILE]({ commit, dispatch, rootState }, payload) {
         return new Promise((resolve, reject) => {
-            $axInstance.get(`${import.meta.env.VITE_APP_OAUTH_API}/myprofile`).then(async(response) => {
+            const toAccessId = import.meta.env.VITE_APP_ACCESS_ID;
+            const toBranchId = import.meta.env.VITE_APP_BRANCH_ID;
+            const toAppId = import.meta.env.VITE_APP_APP_ID;
+            const toDeviceId = import.meta.env.VITE_APP_DEVICE_ID;
+            $axInstance.get(`${import.meta.env.VITE_APP_OAUTH_API}/myprofile?app_id=${toAppId}&branch_id=${toBranchId}&todevice_id=${toDeviceId}&toaccess_id=${toAccessId}&no_headers=1`).then(async(response) => {
                 resolve(response?.data)
                 commit(AUTH_PROFILE,response?.data)
             }).catch(async (error) => {
                 console.error('error', error)
-                if(error?.response?.status==401){
-                    await dispatch('logout');
-                }
                 reject(error?.response?.data)
             });
         })

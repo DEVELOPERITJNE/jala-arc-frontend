@@ -116,7 +116,7 @@ export const LIBRARY_DEL_REF_CODE = "LIBRARY_DEL_REF_CODE";
 
 export const LIBRARY_GET_USER = "LIBRARY_GET_USER";
 
-// PAGE
+// PAGE ARC
 
 export const SET_MY_DOCUMENT_PAGE = "SET_MY_DOCUMENT_PAGE";
 export const PREV_ROUTES_NAME = "PREV_ROUTES_NAME";
@@ -127,3 +127,5 @@ export const TOP_TEN = "TOP_TEN"
 export const DT_MANAGEMENT = "DT_MANAGEMENT"
 export const DT_CLAIM = "DT_CLAIM"
 export const VALIDATION_RECON_GETLIST = "VALIDATION_RECON_GETLIST"
+
+export const IS_403 = "IS_403"
