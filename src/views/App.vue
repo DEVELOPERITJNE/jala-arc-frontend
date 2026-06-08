@@ -1,71 +1,57 @@
 <template>
-    <v-app>
-        <!-- drawer badjingan -->
-
-        <v-navigation-drawer
-            v-model="drawer_app"
-            location="right"
-            class="control-sidebar"
-            width="450"
-            temporary
-            scrim="false"
-        >
-            <div class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button"></div>
-        </v-navigation-drawer>
-        <Header @toggle-drawer="toggleDrawer" />
-        <v-main class="main-wrapper">
-            <router-view></router-view>
+    <router-view v-if="!loading" />
+    <v-app v-else>
+        <v-main class="d-flex align-center justify-center" style="min-height: 100vh;">
+            <v-progress-circular indeterminate color="accent" />
         </v-main>
-        <Footer />
     </v-app>
 </template>
 
-<style scoped>
-
-</style>
-
 <script>
-import { AUTH_PROFILE } from '../stores/actions/reqApi';
-import { mapActions } from 'vuex';
-import Header from '../components/Header.vue';
-import Footer from '../components/Footer.vue';
-import BaseIndex from './BaseIndex.vue';
+import { AUTH_PROFILE, IS_403 } from '../stores/actions/reqApi';
+import { mapActions, mapMutations } from 'vuex';
 
 export default {
     name: 'App',
-    components: {
-        BaseIndex,
-        Header,
-        Footer,
-    },
     data() {
         return { 
-            drawer_app: false,
+            loading: true,
+            forbidden:false,
         }
     },
     methods: {
         handleIframeMessage(event) {
-            console.log('event => ',event)
-            if (event.data?.action === 'RELOAD_PARENT') {
-                window.location.reload()
-            }
-        },
-        toggleDrawer() {
-            this.drawer_app = !this.drawer_app
+            if (event.data?.action === 'RELOAD_PARENT') window.location.reload()
         },
         ...mapActions({
-            act_AUTH_PROFILE: 'auth/'+AUTH_PROFILE,
+            act_AUTH_PROFILE: 'auth/' + AUTH_PROFILE,
         }),
-    },
-    created() {
-        this.$nextTick(async()=>{
-            this.act_AUTH_PROFILE();
+        ...mapMutations({
+            mut_IS_403: 'auth/'+IS_403
         })
+    },
+    async created() {
+        // this.loading = false
+        try {
+            const profile = await this.act_AUTH_PROFILE()
+            if (!profile?.authz) {
+                this.forbidden = true
+                this.mut_IS_403(true)
+                await this.$router.replace('/403')
+                return
+            }
+        } catch (e) {
+            this.forbidden = true
+            this.mut_IS_403(true)
+            await this.$router.replace('/403')
+        } finally {
+            this.loading = false
+        }
     },
     mounted() {
         window.addEventListener('message', this.handleIframeMessage)
     },
-    beforeMount(){
+    beforeUnmount() {
         window.removeEventListener('message', this.handleIframeMessage)
     }
 }
