@@ -9,7 +9,7 @@
 
 <script>
 import { AUTH_PROFILE, IS_403 } from '../stores/actions/reqApi';
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 
 export default {
     name: 'App',
@@ -18,6 +18,11 @@ export default {
             loading: true,
             forbidden:false,
         }
+    },
+    computed: { 
+        ...mapState('auth', {
+            state_IS_403: state => state[IS_403]
+        })
     },
     methods: {
         handleIframeMessage(event) {
